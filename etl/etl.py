@@ -11,3 +11,6 @@ class ETL(ABC):
     @abstractmethod
     def load(self):
         pass
+        
+    def run(self):
+        pass
