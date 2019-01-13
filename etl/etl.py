@@ -5,7 +5,7 @@ class ETL(ABC):
         pass
 
     @abstractmethod
-    def prepare(self):
+    def transform(self):
         pass
 
     @abstractmethod
