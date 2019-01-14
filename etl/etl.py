@@ -1,17 +1,12 @@
 from abc import ABC, abstractmethod
 from db.mysql import cursor
 
-cursor.execute('SELECT * FROM Album')
-cursor.fetchall()
-print(cursor.rowcount)
-
 class ETL(ABC):
     def extract(self):
-        cursor.execute('SELECT * FROM album')
-        cursor.fetchall()
-        print(cursor.rowcount)
+        cursor.execute('SELECT * FROM Album')
         for x in cursor:
             print(x)
+
 
     @abstractmethod
     def transform(self):
@@ -22,4 +17,6 @@ class ETL(ABC):
         pass
         
     def run(self):
-        pass
+        self.extract()
+        self.transform()
+        self.load()
