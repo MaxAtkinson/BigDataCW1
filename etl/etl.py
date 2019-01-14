@@ -1,8 +1,13 @@
 from abc import ABC, abstractmethod
+from db.mysql import cursor
 
 class ETL(ABC):
     def extract(self):
-        pass
+        cursor.execute('SELECT * FROM test1')
+        cursor.fetchall()
+        print(cursor.rowcount)
+        for x in cursor:
+            print(x)
 
     @abstractmethod
     def transform(self):
