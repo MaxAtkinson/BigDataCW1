@@ -1,4 +1,5 @@
 from etl.transformloadtask import TransformLoadTask
+from db.mongo import db
 
 class MongoTL(TransformLoadTask):
     def transform(self):
