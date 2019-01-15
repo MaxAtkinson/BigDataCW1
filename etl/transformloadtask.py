@@ -8,6 +8,10 @@ class TransformLoadTask(ABC):
     @abstractmethod
     def load(self):
         pass
+
+    @abstractmethod
+    def queries(self):
+    	pass
         
     def run(self):
         self.transform()

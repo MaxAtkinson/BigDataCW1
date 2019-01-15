@@ -6,3 +6,6 @@ class NeoTL(TransformLoadTask):
 
     def load(self):
         pass
+
+    def queries(self):
+        pass
