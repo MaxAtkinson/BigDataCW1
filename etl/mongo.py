@@ -1,6 +1,6 @@
-from etl.etl import ETL
+from etl.transformloadtask import TransformLoadTask
 
-class MongoETL(ETL):
+class MongoTL(TransformLoadTask):
     def transform(self):
         pass
         
