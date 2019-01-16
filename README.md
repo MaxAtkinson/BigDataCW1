@@ -1,5 +1,6 @@
 # Big Data Management Coursework 1: NoSQL
-Repo for CW1 of Big Data Management.
+Repo for CW1 of Big Data Management. This project performs an Extract, Transform and Load process from MySQL to two NoSQL databases, MongoDB and Neo4j.
+
 Group Members:
 - Max Atkinson
 - Scott Condron
