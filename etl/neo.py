@@ -1,6 +1,9 @@
-from etl.transformloadtask import TransformLoadTask
+from etl.etl import ETL
 
-class NeoTL(TransformLoadTask):
+class NeoETL(ETL):
+    def extract(self):
+        pass
+
     def transform(self):
         pass
 

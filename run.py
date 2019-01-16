@@ -1,6 +1,6 @@
-from etl.etl import ETL
-from etl.mongo import MongoTL
-from etl.neo import NeoTL
+from etl.mongo import MongoETL
+from etl.neo import NeoETL
 
 if __name__ == '__main__':
-    ETL([MongoTL(), NeoTL()]).run()
+    for job in [MongoETL(), NeoETL()]:
+        job.run()
