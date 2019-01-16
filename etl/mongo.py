@@ -21,7 +21,15 @@ class MongoETL(ETL):
         self.write_query_to_file(cursor, 'playlists')
 
     def extract_invoices(self):
-        pass
+        cursor.execute('''
+            SELECT i.*,
+                il.TrackId,
+                il.InvoiceLineId,
+                il.UnitPrice,
+                il.Quantity
+            FROM Invoice i, InvoiceLine il
+            WHERE i.InvoiceId = il.InvoiceId;''')
+        self.write_query_to_file(cursor, 'invoices')
 
     def extract_employees(self):
         pass
@@ -38,6 +46,7 @@ class MongoETL(ETL):
     def extract(self):
         self.extract_tracks()
         self.extract_playlists()
+        self.extract_invoices()
 
     def transform(self):
         pass
