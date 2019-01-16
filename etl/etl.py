@@ -1,6 +1,5 @@
 import csv
 from abc import ABC, abstractmethod
-from db.mysql import cursor
 
 class ETL(ABC):
     def write_query_to_file(self, cursor, entity_name):
