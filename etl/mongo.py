@@ -29,6 +29,12 @@ class MongoETL(ETL):
     def extract_customers(self):
         pass
 
+    # def extract_artists(self):
+    #     pass
+
+    # def extract_albums(self):
+    #     pass
+
     def extract(self):
         self.extract_tracks()
         self.extract_playlists()
