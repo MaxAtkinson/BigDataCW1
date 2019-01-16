@@ -5,12 +5,17 @@ from db.mysql import cursor
 
 class MongoETL(ETL):
     def extract(self):
-        cursor.execute('SELECT * FROM Album;')
-        with open('data/mongo/Album.csv', 'w') as f:
-            writer = csv.writer(f)
-            writer.writerow(cursor.column_names)
-            for row in cursor:
-                writer.writerow(row)
+        self.extract_tracks()
+
+    def extract_tracks(self):
+        cursor.execute('''
+            SELECT t.*,
+                m.Name AS MediaTypeName,
+                g.Name AS GenreName
+            FROM Track t, Genre g, MediaType m
+            WHERE t.GenreId = g.GenreId
+            AND t.MediaTypeId = m.MediaTypeId;''')
+        self.write_query_to_file(cursor, 'tracks')
 
     def transform(self):
         pass
