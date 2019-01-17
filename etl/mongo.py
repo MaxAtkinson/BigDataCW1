@@ -32,21 +32,34 @@ class MongoETL(ETL):
         self.write_query_to_file(cursor, 'invoices')
 
     def extract_employees(self):
-        pass
+        cursor.execute('''
+            SELECT *
+            FROM Employee;''')
+        self.write_query_to_file(cursor, 'employees')
+
 
     def extract_customers(self):
-        pass
+        cursor.execute('''
+            SELECT *
+            FROM Customer;''')
+        self.write_query_to_file(cursor, 'customers')
 
-    # def extract_artists(self):
-    #     pass
-
-    # def extract_albums(self):
-    #     pass
+    def extract_artists(self):
+        cursor.execute('''
+            SELECT ar.*,
+                al.Title AS AlbumTitle,
+                al.AlbumId
+            FROM Artist ar, Album al
+            WHERE al.ArtistId = ar.ArtistId;''')
+        self.write_query_to_file(cursor, 'artists')
 
     def extract(self):
         self.extract_tracks()
         self.extract_playlists()
         self.extract_invoices()
+        self.extract_customers()
+        self.extract_employees()
+        self.extract_artists()
 
     def transform(self):
         pass
