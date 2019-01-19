@@ -7,3 +7,4 @@ db = mysql.connector.connect(
 	database='Chinook')
 
 cursor = db.cursor()
+cursor.execute('''SET SESSION group_concat_max_len = 15000;''')

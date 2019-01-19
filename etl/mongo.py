@@ -25,12 +25,15 @@ class MongoETL(ETL):
 
     def extract_playlists(self):
         cursor.execute('''
-            SELECT p.*, pt.TrackId
+            SELECT p.*,
+                x.TrackIds
             FROM Playlist p
-            LEFT JOIN PlaylistTrack pt 
-            ON (p.PlaylistId = pt.PlaylistId)
-            ORDER BY p.PlaylistId;
-            ''')
+            LEFT JOIN (
+                SELECT pt.PlaylistId,
+                    GROUP_CONCAT(pt.TrackId) AS TrackIds
+                FROM PlaylistTrack pt 
+                GROUP BY pt.PlaylistId) x
+            ON x.PlaylistId = p.PlaylistId;''')
         self.write_query_to_file(cursor, PLAYLISTS_FILENAME)
 
     def extract_invoices(self):
@@ -71,7 +74,7 @@ class MongoETL(ETL):
         self.write_query_to_file(cursor, ARTISTS_FILENAME)
 
     def extract(self):
-        # self.extract_tracks()
+        self.extract_tracks()
         self.extract_playlists()
         self.extract_invoices()
         self.extract_customers()
@@ -79,7 +82,7 @@ class MongoETL(ETL):
         self.extract_artists()
 
     def transform_and_load(self):
-        # self.transform_and_load_tracks()
+        self.transform_and_load_tracks()
         self.transform_and_load_playlists()
     
     def transform_and_load_tracks(self):
@@ -110,19 +113,13 @@ class MongoETL(ETL):
         with open(f'data/mongo/{PLAYLISTS_FILENAME}.csv', 'r') as f:
             reader = csv.reader(f)
             headers = next(reader)
-            current_id, previous_id = None, None
-            playlist = {'tracks': []}
             for row in reader:
-                current_id = row[headers.index('PlaylistId')]
-                playlist['_id'] = int(current_id)
-                playlist['name'] = row[headers.index('Name')]
-                track_id = row[headers.index('TrackId')]
-                if track_id != '': playlist['tracks'].append(int(track_id))
-                if current_id != previous_id:
-                    print(f'{playlist["_id"]}: {len(playlist["tracks"])}')
-                    self.load('playlists', playlist)
-                    playlist = {'tracks': []}
-                previous_id = current_id
+                track_ids = row[headers.index('TrackIds')].split(',')
+                playlist = {
+                    '_id': int(row[headers.index('PlaylistId')]),
+                    'name': row[headers.index('Name')],
+                    'trackIds': [int(track_id) for track_id in track_ids if track_id != '']}
+                self.load('playlists', playlist)
 
     def load(self, collection, document):
         db[collection].insert_one(document)
