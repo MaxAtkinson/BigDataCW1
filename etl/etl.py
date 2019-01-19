@@ -14,11 +14,7 @@ class ETL(ABC):
         pass
 
     @abstractmethod
-    def transform(self):
-        pass
-
-    @abstractmethod
-    def load(self):
+    def transform_and_load(self):
         pass
 
     @abstractmethod
@@ -27,5 +23,4 @@ class ETL(ABC):
 
     def run(self):
         self.extract()
-        self.transform()
-        self.load()
+        self.transform_and_load()

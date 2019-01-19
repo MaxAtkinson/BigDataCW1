@@ -72,23 +72,20 @@ class MongoETL(ETL):
 
     def extract(self):
         # self.extract_tracks()
-        # self.transform_and_load_tracks()
-
         self.extract_playlists()
-        self.transform_and_load_playlists()
         self.extract_invoices()
         self.extract_customers()
         self.extract_employees()
         self.extract_artists()
 
-    def transform(self):
-        pass
+    def transform_and_load(self):
+        # self.transform_and_load_tracks()
+        self.transform_and_load_playlists()
     
     def transform_and_load_tracks(self):
         with open(f'data/mongo/{TRACKS_FILENAME}.csv', 'r') as f:
             reader = csv.reader(f)
             headers = next(reader)
-            print(headers)
             for row in reader:
                 track = dict(zip(headers, row))
                 track = {
@@ -96,64 +93,39 @@ class MongoETL(ETL):
                     'name': row[headers.index('Name')],
                     'albumId': int(row[headers.index('AlbumId')]),
                     'mediaType': {
-                        '_id': int(row[3]),
-                        'name': row[9]
+                        '_id': int(row[headers.index('MediaTypeId')]),
+                        'name': row[headers.index('MediaTypeName')]
                     },
                     'genre': {
-                        '_id': int(row[4]),
-                        'name': row[10]
+                        '_id': int(row[headers.index('GenreId')]),
+                        'name': row[headers.index('GenreName')]
                     },
-                    'composer': row[5],
-                    'ms': int(row[6]),
-                    'bytes': int(row[7]),
-                    'unitPrice': float(row[8])}
-                self.load_track(track)
-
-    def load_track(self, track):
-        db.tracks.insert_one(track)
+                    'composer': row[headers.index('Composer')],
+                    'ms': int(row[headers.index('Milliseconds')]),
+                    'bytes': int(row[headers.index('Bytes')]),
+                    'unitPrice': float(row[headers.index('UnitPrice')])}
+                self.load('tracks', track)
 
     def transform_and_load_playlists(self):
         with open(f'data/mongo/{PLAYLISTS_FILENAME}.csv', 'r') as f:
             reader = csv.reader(f)
             headers = next(reader)
-            print(headers)
-            current_id = None
-            previous_id = None
-            playlist = {
-                '_id': None,
-                'tracks': [],
-                'name': None
-            }
+            current_id, previous_id = None, None
+            playlist = {'tracks': []}
             for row in reader:
                 current_id = row[headers.index('PlaylistId')]
+                playlist['_id'] = int(current_id)
                 playlist['name'] = row[headers.index('Name')]
-                playlist['_id'] = current_id
-                playlist['tracks'].append(row[headers.index('TrackId')])
+                track_id = row[headers.index('TrackId')]
+                if track_id != '': playlist['tracks'].append(int(track_id))
                 if current_id != previous_id:
-                    db.playlists.insert_one(playlist)
+                    print(f'{playlist["_id"]}: {len(playlist["tracks"])}')
+                    self.load('playlists', playlist)
+                    playlist = {'tracks': []}
                 previous_id = current_id
-            # for row in reader:
-            #     track = dict(zip(headers, row))
-            #     track = {
-            #         '_id': int(row[headers.index('TrackId')]),
-            #         'name': row[headers.index('Name')],
-            #         'albumId': int(row[headers.index('AlbumId')]),
-            #         'mediaType': {
-            #             '_id': int(row[3]),
-            #             'name': row[9]
-            #         },
-            #         'genre': {
-            #             '_id': int(row[4]),
-            #             'name': row[10]
-            #         },
-            #         'composer': row[5],
-            #         'ms': int(row[6]),
-            #         'bytes': int(row[7]),
-            #         'unitPrice': float(row[8])}
-            #     self.load_track(track)
 
-    def load(self):
-        pass
+    def load(self, collection, document):
+        db[collection].insert_one(document)
 
     def queries(self):
         pass

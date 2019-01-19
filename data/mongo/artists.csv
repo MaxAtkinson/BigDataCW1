@@ -9,37 +9,30 @@ ArtistId,Name,AlbumTitle,AlbumId
 6,Antônio Carlos Jobim,Chill: Brazil (Disc 2),34
 6,Antônio Carlos Jobim,Warner 25 Anos,8
 7,Apocalyptica,Plays Metallica By Four Cellos,9
+8,Audioslave,Out Of Exile,11
 8,Audioslave,Revelations,271
 8,Audioslave,Audioslave,10
-8,Audioslave,Out Of Exile,11
 9,BackBeat,BackBeat Soundtrack,12
 10,Billy Cobham,The Best Of Billy Cobham,13
-11,Black Label Society,Alcohol Fueled Brewtality Live! [Disc 2],15
 11,Black Label Society,Alcohol Fueled Brewtality Live! [Disc 1],14
+11,Black Label Society,Alcohol Fueled Brewtality Live! [Disc 2],15
 12,Black Sabbath,Black Sabbath,16
 12,Black Sabbath,Black Sabbath Vol. 4 (Remaster),17
 13,Body Count,Body Count,18
 14,Bruce Dickinson,Chemical Wedding,19
 15,Buddy Guy,The Best Of Buddy Guy - The Millenium Collection,20
-16,Caetano Veloso,Prenda Minha,21
 16,Caetano Veloso,Sozinho Remix Ao Vivo,22
+16,Caetano Veloso,Prenda Minha,21
 17,Chico Buarque,Minha Historia,23
-18,Chico Science & Nação Zumbi,Afrociberdelia,24
 18,Chico Science & Nação Zumbi,Da Lama Ao Caos,25
-19,Cidade Negra,Cidade Negra - Hits,27
+18,Chico Science & Nação Zumbi,Afrociberdelia,24
 19,Cidade Negra,Acústico MTV [Live],26
+19,Cidade Negra,Cidade Negra - Hits,27
 20,Cláudio Zoli,Na Pista,28
-21,Various Artists,Vozes do MPB,53
 21,Various Artists,Sambas De Enredo 2001,45
 21,Various Artists,Axé Bahia 2001,29
 21,Various Artists,Carnaval 2001,32
-22,Led Zeppelin,The Song Remains The Same (Disc 1),137
-22,Led Zeppelin,Physical Graffiti [Disc 1],44
-22,Led Zeppelin,BBC Sessions [Disc 1] [Live],30
-22,Led Zeppelin,Houses Of The Holy,129
-22,Led Zeppelin,Led Zeppelin I,132
-22,Led Zeppelin,Physical Graffiti [Disc 2],135
-22,Led Zeppelin,The Song Remains The Same (Disc 2),138
+21,Various Artists,Vozes do MPB,53
 22,Led Zeppelin,BBC Sessions [Disc 2] [Live],127
 22,Led Zeppelin,In Through The Out Door,130
 22,Led Zeppelin,Led Zeppelin II,133
@@ -47,43 +40,46 @@ ArtistId,Name,AlbumTitle,AlbumId
 22,Led Zeppelin,Coda,128
 22,Led Zeppelin,IV,131
 22,Led Zeppelin,Led Zeppelin III,134
+22,Led Zeppelin,The Song Remains The Same (Disc 1),137
+22,Led Zeppelin,Physical Graffiti [Disc 1],44
+22,Led Zeppelin,BBC Sessions [Disc 1] [Live],30
+22,Led Zeppelin,Houses Of The Holy,129
+22,Led Zeppelin,Led Zeppelin I,132
+22,Led Zeppelin,Physical Graffiti [Disc 2],135
+22,Led Zeppelin,The Song Remains The Same (Disc 2),138
 23,Frank Zappa & Captain Beefheart,Bongo Fury,31
 24,Marcos Valle,Chill: Brazil (Disc 1),33
-27,Gilberto Gil,As Canções de Eu Tu Eles,85
 27,Gilberto Gil,Quanta Gente Veio Ver (Live),86
 27,Gilberto Gil,Quanta Gente Veio ver--Bônus De Carnaval,87
+27,Gilberto Gil,As Canções de Eu Tu Eles,85
 36,O Rappa,Radio Brasil (O Som da Jovem Vanguarda) - Seleccao de Henrique Amaro,259
 37,Ed Motta,The Best of Ed Motta,47
 41,Elis Regina,Elis Regina-Minha História,71
-42,Milton Nascimento,Milton Nascimento Ao Vivo,158
 42,Milton Nascimento,Minas,159
+42,Milton Nascimento,Milton Nascimento Ao Vivo,158
 46,Jorge Ben,Jorge Ben Jor 25 Anos,122
-50,Metallica,Ride The Lightning,154
-50,Metallica,Garage Inc. (Disc 2),149
-50,Metallica,Master Of Puppets,152
-50,Metallica,St. Anger,155
-50,Metallica,Kill 'Em All,150
-50,Metallica,ReLoad,153
 50,Metallica,...And Justice For All,156
+50,Metallica,Load,151
+50,Metallica,Ride The Lightning,154
 50,Metallica,Black Album,148
 50,Metallica,Garage Inc. (Disc 1),35
-50,Metallica,Load,151
+50,Metallica,Master Of Puppets,152
+50,Metallica,St. Anger,155
+50,Metallica,Garage Inc. (Disc 2),149
+50,Metallica,Kill 'Em All,150
+50,Metallica,ReLoad,153
 51,Queen,News Of The World,186
 51,Queen,Greatest Hits II,36
 51,Queen,Greatest Hits I,185
-52,Kiss,Unplugged [Live],126
 52,Kiss,Greatest Kiss,37
+52,Kiss,Unplugged [Live],126
 53,Spyro Gyra,Morning Dance,204
 53,Spyro Gyra,Heart of the Night,38
-54,Green Day,International Superhits,39
 54,Green Day,American Idiot,89
+54,Green Day,International Superhits,39
 55,David Coverdale,Into The Light,40
 56,Gonzaguinha,Meus Momentos,41
 57,Os Mutantes,Minha História,42
-58,Deep Purple,The Final Concerts (Disc 2),50
-58,Deep Purple,Deep Purple In Rock,59
-58,Deep Purple,Machine Head,62
-58,Deep Purple,Stormbringer,65
 58,Deep Purple,Fireball,60
 58,Deep Purple,Purpendicular,63
 58,Deep Purple,The Battle Rages On,66
@@ -91,50 +87,45 @@ ArtistId,Name,AlbumTitle,AlbumId
 58,Deep Purple,Come Taste The Band,58
 58,Deep Purple,Knocking at Your Back Door: The Best Of Deep Purple in the 80's,61
 58,Deep Purple,Slaves And Masters,64
-59,Santana,Santana Live,198
-59,Santana,Supernatural,46
+58,Deep Purple,The Final Concerts (Disc 2),50
+58,Deep Purple,Deep Purple In Rock,59
+58,Deep Purple,Machine Head,62
+58,Deep Purple,Stormbringer,65
 59,Santana,Santana - As Years Go By,197
-68,Miles Davis,Miles Ahead,157
+59,Santana,Supernatural,46
+59,Santana,Santana Live,198
 68,Miles Davis,The Essential Miles Davis [Disc 1],48
+68,Miles Davis,Miles Ahead,157
 68,Miles Davis,The Essential Miles Davis [Disc 2],49
 69,Gene Krupa,Up An' Atom,51
 70,Toquinho & Vinícius,Vinícius De Moraes - Sem Limite,52
 72,Vinícius De Moraes,Vinicius De Moraes,247
 76,Creedence Clearwater Revival,"Chronicle, Vol. 1",54
 76,Creedence Clearwater Revival,"Chronicle, Vol. 2",55
-77,Cássia Eller,Cássia Eller - Coleção Sem Limite [Disc 2],56
 77,Cássia Eller,Cássia Eller - Sem Limite [Disc 1],57
+77,Cássia Eller,Cássia Eller - Coleção Sem Limite [Disc 2],56
 78,Def Leppard,Vault: Def Leppard's Greatest Hits,67
 79,Dennis Chambers,Outbreak,68
 80,Djavan,Djavan Ao Vivo - Vol. 02,69
 80,Djavan,Djavan Ao Vivo - Vol. 1,70
-81,Eric Clapton,Unplugged,73
 81,Eric Clapton,The Cream Of Clapton,72
-82,Faith No More,King For A Day Fool For A Lifetime,76
-82,Faith No More,Album Of The Year,74
+81,Eric Clapton,Unplugged,73
 82,Faith No More,The Real Thing,77
 82,Faith No More,Angel Dust,75
+82,Faith No More,King For A Day Fool For A Lifetime,76
+82,Faith No More,Album Of The Year,74
 83,Falamansa,Deixa Entrar,78
-84,Foo Fighters,In Your Honor [Disc 1],79
-84,Foo Fighters,The Colour And The Shape,82
 84,Foo Fighters,In Your Honor [Disc 2],80
 84,Foo Fighters,One By One,81
+84,Foo Fighters,In Your Honor [Disc 1],79
+84,Foo Fighters,The Colour And The Shape,82
 85,Frank Sinatra,My Way: The Best Of Frank Sinatra [Disc 1],83
 86,Funk Como Le Gusta,Roda De Funk,84
 87,Godsmack,Faceless,88
-88,Guns N' Roses,Use Your Illusion I,91
 88,Guns N' Roses,Use Your Illusion II,92
 88,Guns N' Roses,Appetite for Destruction,90
+88,Guns N' Roses,Use Your Illusion I,91
 89,Incognito,Blue Moods,93
-90,Iron Maiden,No Prayer For The Dying,105
-90,Iron Maiden,Rock In Rio [CD1],108
-90,Iron Maiden,Somewhere in Time,111
-90,Iron Maiden,Virtual XI,114
-90,Iron Maiden,A Matter of Life and Death,94
-90,Iron Maiden,Brave New World,97
-90,Iron Maiden,Iron Maiden,100
-90,Iron Maiden,Live At Donington 1992 (Disc 1),103
-90,Iron Maiden,Piece Of Mind,106
 90,Iron Maiden,Rock In Rio [CD2],109
 90,Iron Maiden,The Number of The Beast,112
 90,Iron Maiden,A Real Dead One,95
@@ -147,21 +138,30 @@ ArtistId,Name,AlbumTitle,AlbumId
 90,Iron Maiden,A Real Live One,96
 90,Iron Maiden,Fear Of The Dark,99
 90,Iron Maiden,Live After Death,102
+90,Iron Maiden,No Prayer For The Dying,105
+90,Iron Maiden,Rock In Rio [CD1],108
+90,Iron Maiden,Somewhere in Time,111
+90,Iron Maiden,Virtual XI,114
+90,Iron Maiden,A Matter of Life and Death,94
+90,Iron Maiden,Brave New World,97
+90,Iron Maiden,Iron Maiden,100
+90,Iron Maiden,Live At Donington 1992 (Disc 1),103
+90,Iron Maiden,Piece Of Mind,106
 91,James Brown,Sex Machine,115
-92,Jamiroquai,Synkronized,117
 92,Jamiroquai,The Return Of The Space Cowboy,118
 92,Jamiroquai,Emergency On Planet Earth,116
+92,Jamiroquai,Synkronized,117
 93,JET,Get Born,119
 94,Jimi Hendrix,Are You Experienced?,120
 95,Joe Satriani,Surfing with the Alien (Remastered),121
 96,Jota Quest,Jota Quest-1995,123
 97,João Suplicy,Cafezinho,124
 98,Judas Priest,Living After Midnight,125
-99,Legião Urbana,Mais Do Mesmo,140
 99,Legião Urbana,A TempestadeTempestade Ou O Livro Dos Dias,139
+99,Legião Urbana,Mais Do Mesmo,140
 100,Lenny Kravitz,Greatest Hits,141
-101,Lulu Santos,Lulu Santos - RCA 100 Anos De Música - Álbum 02,143
 101,Lulu Santos,Lulu Santos - RCA 100 Anos De Música - Álbum 01,142
+101,Lulu Santos,Lulu Santos - RCA 100 Anos De Música - Álbum 02,143
 102,Marillion,Misplaced Childhood,144
 103,Marisa Monte,Barulhinho Bom,145
 104,Marvin Gaye,Seek And Shall Find: More Of The Best (1963-1981),146
@@ -173,37 +173,37 @@ ArtistId,Name,AlbumTitle,AlbumId
 110,Nirvana,Nevermind,164
 111,O Terço,Compositores,165
 112,Olodum,Olodum,166
+113,Os Paralamas Do Sucesso,Arquivo II,168
 113,Os Paralamas Do Sucesso,Arquivo Os Paralamas Do Sucesso,169
 113,Os Paralamas Do Sucesso,Acústico MTV,167
-113,Os Paralamas Do Sucesso,Arquivo II,168
+114,Ozzy Osbourne,Blizzard of Ozz,171
+114,Ozzy Osbourne,Tribute,174
 114,Ozzy Osbourne,Speak of the Devil,256
 114,Ozzy Osbourne,Diary of a Madman (Remastered),172
 114,Ozzy Osbourne,Bark at the Moon (Remastered),170
 114,Ozzy Osbourne,No More Tears (Remastered),173
-114,Ozzy Osbourne,Blizzard of Ozz,171
-114,Ozzy Osbourne,Tribute,174
 115,Page & Plant,Walking Into Clarksdale,175
 116,Passengers,Original Soundtracks 1,176
 117,Paul D'Ianno,The Beast Live,177
+118,Pearl Jam,Riot Act,180
 118,Pearl Jam,Live On Two Legs [Live],178
 118,Pearl Jam,Ten,181
 118,Pearl Jam,Pearl Jam,179
 118,Pearl Jam,Vs.,182
-118,Pearl Jam,Riot Act,180
 120,Pink Floyd,Dark Side Of The Moon,183
 121,Planet Hemp,Os Cães Ladram Mas A Caravana Não Pára,184
 122,R.E.M. Feat. Kate Pearson,Out Of Time,187
+124,R.E.M.,Green,188
 124,R.E.M.,New Adventures In Hi-Fi,189
 124,R.E.M.,The Best Of R.E.M.: The IRS Years,190
-124,R.E.M.,Green,188
 125,Raimundos,Cesta Básica,191
 126,Raul Seixas,Raul Seixas,192
+127,Red Hot Chili Peppers,By The Way,194
 127,Red Hot Chili Peppers,Californication,195
 127,Red Hot Chili Peppers,Blood Sugar Sex Magik,193
-127,Red Hot Chili Peppers,By The Way,194
 128,Rush,Retrospective I (1974-1980),196
-130,Skank,Maquinarama,199
 130,Skank,O Samba Poconé,200
+130,Skank,Maquinarama,199
 131,Smashing Pumpkins,Judas 0: B-Sides and Rarities,201
 131,Smashing Pumpkins,Rotten Apples: Greatest Hits,202
 132,Soundgarden,A-Sides,203
@@ -211,45 +211,45 @@ ArtistId,Name,AlbumTitle,AlbumId
 134,Stone Temple Pilots,Core,206
 135,System Of A Down,Mezmerize,207
 136,"Terry Bozzio, Tony Levin & Steve Stevens",[1997] Black Light Syndrome,208
-137,The Black Crowes,Live [Disc 2],210
 137,The Black Crowes,Live [Disc 1],209
+137,The Black Crowes,Live [Disc 2],210
 138,The Clash,The Singles,211
-139,The Cult,"Pure Cult: The Best Of The Cult (For Rockers, Ravers, Lovers & Sinners) [UK]",213
 139,The Cult,Beyond Good And Evil,212
+139,The Cult,"Pure Cult: The Best Of The Cult (For Rockers, Ravers, Lovers & Sinners) [UK]",213
 140,The Doors,The Doors,214
 141,The Police,The Police Greatest Hits,215
 142,The Rolling Stones,Voodoo Lounge,218
 142,The Rolling Stones,"Hot Rocks, 1964-1971 (Disc 1)",216
 142,The Rolling Stones,No Security,217
-143,The Tea Party,Tangents,219
 143,The Tea Party,Transmission,220
+143,The Tea Party,Tangents,219
 144,The Who,My Generation - The Very Best Of The Who,221
-145,Tim Maia,Serie Sem Limite (Disc 1),222
 145,Tim Maia,Serie Sem Limite (Disc 2),223
+145,Tim Maia,Serie Sem Limite (Disc 1),222
 146,Titãs,Acústico,224
 146,Titãs,Volume Dois,225
-147,Battlestar Galactica,"Battlestar Galactica, Season 3",227
 147,Battlestar Galactica,Battlestar Galactica: The Story So Far,226
+147,Battlestar Galactica,"Battlestar Galactica, Season 3",227
 148,Heroes,"Heroes, Season 1",228
+149,Lost,"LOST, Season 4",261
+149,Lost,"Lost, Season 3",229
 149,Lost,"Lost, Season 1",230
 149,Lost,"Lost, Season 2",231
-149,Lost,"Lost, Season 3",229
-149,Lost,"LOST, Season 4",261
+150,U2,Instant Karma: The Amnesty International Campaign to Save Darfur,255
+150,U2,Achtung Baby,232
+150,U2,How To Dismantle An Atomic Bomb,235
+150,U2,The Best Of 1980-1990,238
 150,U2,All That You Can't Leave Behind,233
 150,U2,Pop,236
 150,U2,War,239
 150,U2,B-Sides 1980-1990,234
 150,U2,Rattle And Hum,237
 150,U2,Zooropa,240
-150,U2,Instant Karma: The Amnesty International Campaign to Save Darfur,255
-150,U2,Achtung Baby,232
-150,U2,How To Dismantle An Atomic Bomb,235
-150,U2,The Best Of 1980-1990,238
 151,UB40,UB40 The Best Of - Volume Two [UK],241
+152,Van Halen,Van Halen,244
 152,Van Halen,Diver Down,242
 152,Van Halen,Van Halen III,245
 152,Van Halen,"The Best Of Van Halen, Vol. I",243
-152,Van Halen,Van Halen,244
 153,Velvet Revolver,Contraband,246
 155,Zeca Pagodinho,Ao Vivo [IMPORT],248
 156,The Office,"The Office, Season 2",250
@@ -311,18 +311,18 @@ ArtistId,Name,AlbumTitle,AlbumId
 242,Edo de Waart & San Francisco Symphony,"Adams, John: The Chairman Dances",307
 243,Antal Doráti & London Symphony Orchestra,"Tchaikovsky: 1812 Festival Overture, Op.49, Capriccio Italien & Beethoven: Wellington's Victory",308
 244,Choir Of Westminster Abbey & Simon Preston,Palestrina: Missa Papae Marcelli & Allegri: Miserere,309
-245,Michael Tilson Thomas & San Francisco Symphony,Berlioz: Symphonie Fantastique,312
 245,Michael Tilson Thomas & San Francisco Symphony,Prokofiev: Romeo & Juliet,310
+245,Michael Tilson Thomas & San Francisco Symphony,Berlioz: Symphonie Fantastique,312
 246,"Chor der Wiener Staatsoper, Herbert Von Karajan & Wiener Philharmoniker",Bizet: Carmen Highlights,313
 247,The King's Singers,English Renaissance,314
-248,Berliner Philharmoniker & Herbert Von Karajan,Mozart: Symphonies Nos. 40 & 41,320
 248,Berliner Philharmoniker & Herbert Von Karajan,Prokofiev: Symphony No.5 & Stravinksy: Le Sacre Du Printemps,336
 248,Berliner Philharmoniker & Herbert Von Karajan,Grieg: Peer Gynt Suites & Sibelius: Pelléas et Mélisande,316
+248,Berliner Philharmoniker & Herbert Von Karajan,Mozart: Symphonies Nos. 40 & 41,320
 249,"Sir Georg Solti, Sumi Jo & Wiener Philharmoniker",Mozart Gala: Famous Arias,317
 250,Christopher O'Riley,SCRIABIN: Vers la flamme,318
 251,Fretwork,Armada: Music from the Courts of England and Spain,319
-252,Amy Winehouse,Back to Black,321
 252,Amy Winehouse,Frank,322
+252,Amy Winehouse,Back to Black,321
 253,Calexico,Carried to Dust (Bonus Track Version),323
 254,Otto Klemperer & Philharmonia Orchestra,Beethoven: Symphony No. 6 'Pastoral' Etc.,324
 255,Yehudi Menuhin,Bartok: Violin & Viola Concertos,325
