@@ -7,6 +7,7 @@ TRACKS_FILENAME = 'tracks'
 PLAYLISTS_FILENAME = 'playlists'
 PLAYLIST_TRACKS_FILENAME = 'playlistTracks'
 INVOICES_FILENAME = 'invoices'
+INVOICE_LINES_FILENAME = 'invoiceLines'
 EMPLOYEES_FILENAME = 'employees'
 CUSTOMERS_FILENAME = 'customers'
 ARTISTS_FILENAME = 'artists'
@@ -46,12 +47,10 @@ class MongoETL(ETL):
     def extract_invoices(self):
         cursor.execute('''
             SELECT i.*,
-                il.TrackId,
-                il.InvoiceLineId,
-                il.UnitPrice,
-                il.Quantity
+                COUNT(il.InvoiceId) AS NumLines
             FROM Invoice i, InvoiceLine il
             WHERE i.InvoiceId = il.InvoiceId
+            GROUP BY i.InvoiceId
             ORDER BY i.InvoiceId;''')
         self.write_query_to_file(cursor, INVOICES_FILENAME)
 
@@ -88,6 +87,13 @@ class MongoETL(ETL):
             ORDER BY ar.ArtistId;''')
         self.write_query_to_file(cursor, ARTISTS_FILENAME)
 
+    def extract_invoice_lines(self):
+        cursor.execute('''
+            SELECT *
+            FROM InvoiceLine
+            ORDER BY InvoiceId;''')
+        self.write_query_to_file(cursor, INVOICE_LINES_FILENAME)
+
     def extract(self):
         self.extract_tracks()
         self.extract_playlists()
@@ -95,6 +101,7 @@ class MongoETL(ETL):
         self.extract_artists()
         self.extract_albums()
         self.extract_invoices()
+        self.extract_invoice_lines()
         self.extract_customers()
         self.extract_employees()
 
@@ -102,6 +109,10 @@ class MongoETL(ETL):
         self.transform_and_load_tracks()
         self.transform_and_load_playlists()
         self.transform_and_load_artists()
+        self.transform_and_load_invoices() # TODO
+
+    def transform_and_load_invoices(self):
+        pass
     
     def transform_and_load_tracks(self):
         with open(f'data/mongo/{TRACKS_FILENAME}.csv', 'r') as f:
