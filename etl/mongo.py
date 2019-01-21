@@ -5,6 +5,7 @@ from db.mysql import cursor
 
 TRACKS_FILENAME = 'tracks'
 PLAYLISTS_FILENAME = 'playlists'
+PLAYLIST_TRACKS_FILENAME = 'playlistTracks'
 INVOICES_FILENAME = 'invoices'
 EMPLOYEES_FILENAME = 'employees'
 CUSTOMERS_FILENAME = 'customers'
@@ -26,15 +27,20 @@ class MongoETL(ETL):
     def extract_playlists(self):
         cursor.execute('''
             SELECT p.*,
-                x.TrackIds
+                COUNT(pt.TrackId) AS NumTracks
             FROM Playlist p
-            LEFT JOIN (
-                SELECT pt.PlaylistId,
-                    GROUP_CONCAT(pt.TrackId) AS TrackIds
-                FROM PlaylistTrack pt 
-                GROUP BY pt.PlaylistId) x
-            ON x.PlaylistId = p.PlaylistId;''')
+            LEFT JOIN PlaylistTrack pt
+            ON (p.PlaylistId = pt.PlaylistId)
+            GROUP BY p.PlaylistId
+            ORDER BY p.PlaylistId;''')
         self.write_query_to_file(cursor, PLAYLISTS_FILENAME)
+
+    def extract_playlist_tracks(self):
+        cursor.execute('''
+            SELECT *
+            FROM PlaylistTrack
+            ORDER BY PlaylistId;''')
+        self.write_query_to_file(cursor, PLAYLIST_TRACKS_FILENAME)
 
     def extract_invoices(self):
         cursor.execute('''
@@ -76,6 +82,7 @@ class MongoETL(ETL):
     def extract(self):
         self.extract_tracks()
         self.extract_playlists()
+        self.extract_playlist_tracks()
         self.extract_invoices()
         self.extract_customers()
         self.extract_employees()
@@ -107,19 +114,22 @@ class MongoETL(ETL):
                     'ms': int(row[headers.index('Milliseconds')]),
                     'bytes': int(row[headers.index('Bytes')]),
                     'unitPrice': float(row[headers.index('UnitPrice')])}
-                self.load('tracks', track)
+                self.load(TRACKS_FILENAME, track)
 
     def transform_and_load_playlists(self):
-        with open(f'data/mongo/{PLAYLISTS_FILENAME}.csv', 'r') as f:
-            reader = csv.reader(f)
-            headers = next(reader)
-            for row in reader:
-                track_ids = row[headers.index('TrackIds')].split(',')
+        playlist_path = f'data/mongo/{PLAYLISTS_FILENAME}.csv'
+        playlist_track_path = f'data/mongo/{PLAYLIST_TRACKS_FILENAME}.csv'
+        with open(playlist_path, 'r') as p, open(playlist_track_path) as pt:
+            playlist_reader, playlist_tracks_reader = csv.reader(p), csv.reader(pt)
+            playlist_headers, playlist_tracks_headers = next(playlist_reader), next(playlist_tracks_reader)
+            for row in playlist_reader:
                 playlist = {
-                    '_id': int(row[headers.index('PlaylistId')]),
-                    'name': row[headers.index('Name')],
-                    'trackIds': [int(track_id) for track_id in track_ids if track_id != '']}
-                self.load('playlists', playlist)
+                    '_id': int(row[playlist_headers.index('PlaylistId')]),
+                    'name': row[playlist_headers.index('Name')],
+                    'trackIds': [
+                        int(next(playlist_tracks_reader)[playlist_tracks_headers.index('TrackId')])
+                        for _ in range(int(row[playlist_headers.index('NumTracks')]))]}
+                self.load(PLAYLISTS_FILENAME, playlist)
 
     def load(self, collection, document):
         db[collection].insert_one(document)
