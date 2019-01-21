@@ -109,7 +109,9 @@ class MongoETL(ETL):
         self.transform_and_load_tracks()
         self.transform_and_load_playlists()
         self.transform_and_load_artists()
-        self.transform_and_load_invoices() # TODO
+        self.transform_and_load_invoices()
+        # self.transform_and_load_customers()
+        # self.transform_and_load_employees()
 
     def transform_and_load_invoices(self):
         pass
