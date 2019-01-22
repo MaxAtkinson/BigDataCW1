@@ -111,8 +111,29 @@ class MongoETL(ETL):
         self.transform_and_load_playlists()
         self.transform_and_load_artists()
         self.transform_and_load_invoices()
-        # self.transform_and_load_customers()
+        self.transform_and_load_customers()
         # self.transform_and_load_employees()
+
+    def transform_and_load_customers(self):
+        with open(f'data/mongo/{CUSTOMERS_FILENAME}.csv', 'r') as f:
+            reader = csv.reader(f)
+            customer_headers = next(reader)
+            for row in reader:
+                customer = {
+                    '_id': int(row[customer_headers.index('CustomerId')]),
+                    'firstName': row[customer_headers.index('FirstName')],
+                    'lastName': row[customer_headers.index('LastName')],
+                    'company': row[customer_headers.index('Company')],
+                    'address': row[customer_headers.index('Address')],
+                    'city': row[customer_headers.index('City')],
+                    'state': row[customer_headers.index('State')],
+                    'country': row[customer_headers.index('Country')],
+                    'postalCode': row[customer_headers.index('PostalCode')],
+                    'phone': row[customer_headers.index('Phone')],
+                    'fax': row[customer_headers.index('Fax')],
+                    'email': row[customer_headers.index('Email')],
+                    'supportRepId': int(row[customer_headers.index('SupportRepId')])}
+                self.load(CUSTOMERS_FILENAME, customer)
 
     def transform_and_load_invoices(self):
         invoice_path = f'data/mongo/{INVOICES_FILENAME}.csv'
@@ -150,7 +171,6 @@ class MongoETL(ETL):
             reader = csv.reader(f)
             headers = next(reader)
             for row in reader:
-                track = dict(zip(headers, row))
                 track = {
                     '_id': int(row[headers.index('TrackId')]),
                     'name': row[headers.index('Name')],
