@@ -2,6 +2,7 @@ import csv
 from etl.etl import ETL
 from db.mongo import db
 from db.mysql import cursor
+from dateutil.parser import parse
 
 TRACKS_FILENAME = 'tracks'
 PLAYLISTS_FILENAME = 'playlists'
@@ -114,7 +115,35 @@ class MongoETL(ETL):
         # self.transform_and_load_employees()
 
     def transform_and_load_invoices(self):
-        pass
+        invoice_path = f'data/mongo/{INVOICES_FILENAME}.csv'
+        invoice_lines_path = f'data/mongo/{INVOICE_LINES_FILENAME}.csv'
+        with open(invoice_path, 'r') as i, open(invoice_lines_path) as il:
+            invoice_reader, invoice_lines_reader = csv.reader(i), csv.reader(il)
+            invoice_headers, invoice_lines_headers = next(invoice_reader), next(invoice_lines_reader)
+            for row in invoice_reader:
+                invoice_date = parse(row[invoice_headers.index('InvoiceDate')])
+                invoice = {
+                    '_id': int(row[invoice_headers.index('InvoiceId')]),
+                    'customerId': int(row[invoice_headers.index('CustomerId')]),
+                    'invoiceDate': invoice_date,
+                    'billingAddress': row[invoice_headers.index('BillingAddress')],
+                    'billingCity': row[invoice_headers.index('BillingCity')],
+                    'billingState': row[invoice_headers.index('BillingState')],
+                    'billingCountry': row[invoice_headers.index('BillingCountry')],
+                    'billingPostalCode': row[invoice_headers.index('BillingPostalCode')]
+                }
+                invoice_lines = []
+                for _ in range(int(row[invoice_headers.index('NumLines')])):
+                    invoice_lines_row = next(invoice_lines_reader)
+                    invoice_lines.append({
+                            '_id': int(invoice_lines_row[invoice_lines_headers.index('InvoiceLineId')]),
+                            'invoiceId': int(invoice_lines_row[invoice_lines_headers.index('InvoiceId')]),
+                            'trackId': int(invoice_lines_row[invoice_lines_headers.index('TrackId')]),
+                            'unitPrice': float(invoice_lines_row[invoice_lines_headers.index('UnitPrice')]),
+                            'quantity': int(invoice_lines_row[invoice_lines_headers.index('Quantity')])
+                        })
+                invoice['invoiceLines'] = invoice_lines
+                self.load(INVOICES_FILENAME, invoice)
     
     def transform_and_load_tracks(self):
         with open(f'data/mongo/{TRACKS_FILENAME}.csv', 'r') as f:
