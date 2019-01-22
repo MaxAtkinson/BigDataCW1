@@ -112,7 +112,18 @@ class MongoETL(ETL):
         self.transform_and_load_artists()
         self.transform_and_load_invoices()
         self.transform_and_load_customers()
-        # self.transform_and_load_employees()
+        self.transform_and_load_employees()
+
+    def transform_and_load_employees(self):
+        with open(f'data/mongo/{EMPLOYEES_FILENAME}.csv', 'r') as f:
+            reader = csv.reader(f)
+            headers = [first_lower(header) for header in next(reader)]
+            for row in reader:
+                employee = dict(zip(headers, row))
+                employee['reportsTo'] = int(employee['reportsTo']) if employee['reportsTo'].isdigit() else None  
+                employee['hireDate'] = parse(employee['hireDate'])
+                employee['birthDate'] = parse(employee['birthDate'])
+                self.load(EMPLOYEES_FILENAME, employee)
 
     def transform_and_load_customers(self):
         with open(f'data/mongo/{CUSTOMERS_FILENAME}.csv', 'r') as f:
@@ -228,3 +239,5 @@ class MongoETL(ETL):
 
     def queries(self):
         pass
+
+def first_lower(s): return s[0].lower() + s[1:]
