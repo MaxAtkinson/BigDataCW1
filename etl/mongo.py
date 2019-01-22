@@ -120,6 +120,8 @@ class MongoETL(ETL):
             headers = [first_lower(header) for header in next(reader)]
             for row in reader:
                 employee = dict(zip(headers, row))
+                employee['_id'] = int(employee['employeeId'])
+                employee.pop('employeeId', None)
                 employee['reportsTo'] = int(employee['reportsTo']) if employee['reportsTo'].isdigit() else None  
                 employee['hireDate'] = parse(employee['hireDate'])
                 employee['birthDate'] = parse(employee['birthDate'])
