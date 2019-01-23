@@ -164,8 +164,8 @@ class MongoETL(ETL):
                     'billingCity': row[invoice_headers.index('BillingCity')],
                     'billingState': row[invoice_headers.index('BillingState')],
                     'billingCountry': row[invoice_headers.index('BillingCountry')],
-                    'billingPostalCode': row[invoice_headers.index('BillingPostalCode')]
-                }
+                    'billingPostalCode': row[invoice_headers.index('BillingPostalCode')],
+                    'total': float(row[invoice_headers.index('Total')])}
                 invoice_lines = []
                 for _ in range(int(row[invoice_headers.index('NumLines')])):
                     invoice_lines_row = next(invoice_lines_reader)
@@ -212,9 +212,10 @@ class MongoETL(ETL):
                 playlist = {
                     '_id': int(row[playlist_headers.index('PlaylistId')]),
                     'name': row[playlist_headers.index('Name')],
-                    'trackIds': [
-                        int(next(playlist_tracks_reader)[playlist_tracks_headers.index('TrackId')])
-                        for _ in range(int(row[playlist_headers.index('NumTracks')]))]}
+                    'trackIds': []}
+                for _ in range(int(row[playlist_headers.index('NumTracks')])):
+                    playlist_track = next(playlist_tracks_reader)
+                    playlist['trackIds'].append(int(playlist_track[playlist_tracks_headers.index('TrackId')]))
                 self.load(PLAYLISTS_FILENAME, playlist)
 
     def transform_and_load_artists(self):
