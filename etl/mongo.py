@@ -116,6 +116,7 @@ class MongoETL(ETL):
 
     def transform_and_load_employees(self):
         with open(f'data/mongo/{EMPLOYEES_FILENAME}.csv', 'r') as f:
+            def first_lower(s): return s[0].lower() + s[1:]
             reader = csv.reader(f)
             headers = [first_lower(header) for header in next(reader)]
             for row in reader:
@@ -242,5 +243,3 @@ class MongoETL(ETL):
 
     def queries(self):
         pass
-
-def first_lower(s): return s[0].lower() + s[1:]
