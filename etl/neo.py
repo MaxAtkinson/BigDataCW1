@@ -9,3 +9,15 @@ class NeoETL(ETL):
 
     def query_genre_distribution_by_playlist(self):
         pass
+
+    def query2(self):
+        pass
+
+    def query3(self):
+        pass
+
+    def query4(self):
+        pass
+
+    def query5(self):
+        pass

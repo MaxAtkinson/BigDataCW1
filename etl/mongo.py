@@ -278,4 +278,16 @@ class MongoETL(ETL):
             print('Invalid input, please try again:')
             self.query_genre_distribution_by_playlist()
 
+    def query2(self):
+        pass
+
+    def query3(self):
+        pass
+
+    def query4(self):
+        pass
+
+    def query5(self):
+        pass
+
 
