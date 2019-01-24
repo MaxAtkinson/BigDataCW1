@@ -18,8 +18,11 @@ class ETL(ABC):
         pass
 
     @abstractmethod
-    def queries(self):
+    def query_genre_distribution_by_playlist(self):
         pass
+
+    def queries(self):
+        self.query_genre_distribution_by_playlist()
 
     def run(self):
         self.extract()

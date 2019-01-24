@@ -1,4 +1,5 @@
 import csv
+import pprint
 from etl.etl import ETL
 from db.mongo import db
 from db.mysql import cursor
@@ -241,5 +242,40 @@ class MongoETL(ETL):
     def load(self, collection, document):
         db[collection].insert_one(document)
 
-    def queries(self):
-        pass
+    def query_genre_distribution_by_playlist(self):
+        playlist_name = input('''Don't know if you'll like this playlist?\nEnter a playlist name to see the genre distribution:\n''')
+        try:
+            genre_distribution_for_playlist = db.playlists.aggregate([
+                {
+                    '$match': {
+                        'name': {
+                            '$regex' : playlist_name,
+                            '$options': 'i'
+                        }
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'tracks',
+                        'as': 'tracks',
+                        'localField': 'trackIds',
+                        'foreignField': '_id'
+                    }
+                },
+                {
+                    '$project': {'trackIds': False}
+                },
+                {
+                    '$unwind': '$tracks'
+                },
+                {
+                    '$sortByCount': '$tracks.genre.name'
+                }
+            ])
+            for x in genre_distribution_for_playlist:
+                print(f'There are {x["count"]} {x["_id"]} songs in the "{playlist_name}" playlist.')
+        except Exception:
+            print('Invalid input, please try again:')
+            self.query_genre_distribution_by_playlist()
+
+
