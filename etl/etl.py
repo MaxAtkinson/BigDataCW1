@@ -18,8 +18,31 @@ class ETL(ABC):
         pass
 
     @abstractmethod
-    def queries(self):
+    def query_genre_distribution_by_playlist(self):
         pass
+
+    @abstractmethod
+    def query2(self):
+        pass
+
+    @abstractmethod
+    def query3(self):
+        pass
+
+    @abstractmethod
+    def query4(self):
+        pass
+
+    @abstractmethod
+    def query5(self):
+        pass
+
+    def queries(self):
+        self.query_genre_distribution_by_playlist()
+        self.query2()
+        self.query3()
+        self.query4()
+        self.query5()
 
     def run(self):
         self.extract()

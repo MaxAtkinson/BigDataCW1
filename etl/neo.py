@@ -7,5 +7,17 @@ class NeoETL(ETL):
     def transform_and_load(self):
         pass
 
-    def queries(self):
+    def query_genre_distribution_by_playlist(self):
+        pass
+
+    def query2(self):
+        pass
+
+    def query3(self):
+        pass
+
+    def query4(self):
+        pass
+
+    def query5(self):
         pass
