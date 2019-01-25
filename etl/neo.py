@@ -1,8 +1,15 @@
 from etl.etl import ETL
+from db.neo import db
 
 class NeoETL(ETL):
     def extract(self):
-        pass
+        query = '''
+        USING PERIODIC COMMIT
+        LOAD CSV WITH HEADERS FROM 'file:///invoices.csv'
+        AS row
+        CREATE (:Customer {billingAddress: row.BillingAddress});
+        '''            
+        db().run(query)
 
     def transform_and_load(self):
         pass
