@@ -1,26 +1,30 @@
 import os
+import constants
 from etl.etl import ETL
 from db.neo import db
 
 class NeoETL(ETL):
+
     def extract(self):
         pass
 
     def transform_and_load(self):
+        # with db() as session:
+
+        #     session.run('MATCH (t:Track) DELETE t')
+        #     session.run('MATCH (p:Playlist) DELETE p')
         if not os.path.isfile('/var/lib/neo4j/import/tracks.csv'):
             p = os.popen('ln ./data/mongo/* /var/lib/neo4j/import')
-        with db() as session:
-            session.run('MATCH (t:Track) DELETE t')
         self.transform_and_load_tracks()
-        # self.transform_and_load_playlists()
+        self.transform_and_load_playlists()
 
     def transform_and_load_tracks(self):
         with db() as session:
-            query = '''
+            session.run(f'''
                 USING PERIODIC COMMIT
-                LOAD CSV WITH HEADERS FROM 'file:///tracks.csv'
+                LOAD CSV WITH HEADERS FROM 'file:///{constants.TRACKS_FILENAME}.csv'
                 AS row
-                CREATE (:Track {
+                CREATE (:Track {{
                     id: toInt(row.TrackId),
                     name: row.Name,
                     albumId: toInt(row.AlbumId),
@@ -32,10 +36,30 @@ class NeoETL(ETL):
                     ms: toInt(row.Milliseconds),
                     bytes: toInt(row.Bytes),
                     unitPrice: toFloat(row.UnitPrice)
-                }); 
-            '''
-            session.run(query)
+                }}); 
+            ''')
             session.run('CREATE INDEX ON :Track(id)')
+
+    def transform_and_load_playlists(self):
+        with db() as session:
+            session.run(f'''
+                USING PERIODIC COMMIT
+                LOAD CSV WITH HEADERS FROM 'file:///{constants.PLAYLISTS_FILENAME}.csv'
+                AS row
+                CREATE (:Playlist {{
+                    id: toInt(row.PlaylistId),
+                    name: row.Name
+                }}); 
+            ''')
+            session.run('CREATE INDEX ON :Playlist(id)')
+            session.run(f'''
+                USING PERIODIC COMMIT
+                LOAD CSV WITH HEADERS FROM 'file:///{constants.PLAYLIST_TRACKS_FILENAME}.csv'
+                AS row
+                MATCH (t:Track {{id: toInt(row.TrackId)}}), 
+                    (p:Playlist {{id: toInt(row.PlaylistId)}})
+                MERGE (p)-[:CONTAINS]->(t);
+            ''')
 
     def query_genre_distribution_by_playlist(self):
         pass
