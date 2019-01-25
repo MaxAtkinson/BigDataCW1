@@ -9,14 +9,33 @@ class NeoETL(ETL):
     def transform_and_load(self):
         if not os.path.isfile('/var/lib/neo4j/import/tracks.csv'):
             p = os.popen('ln ./data/mongo/* /var/lib/neo4j/import')
-        query = '''
-        USING PERIODIC COMMIT
-        LOAD CSV WITH HEADERS FROM 'file:///invoices.csv'
-        AS row
-        CREATE (:Customer {billingAddress: row.BillingAddress});
-        '''            
-        db().run(query)
-        pass
+        with db() as session:
+            session.run('MATCH (t:Track) DELETE t')
+        self.transform_and_load_tracks()
+        # self.transform_and_load_playlists()
+
+    def transform_and_load_tracks(self):
+        with db() as session:
+            query = '''
+                USING PERIODIC COMMIT
+                LOAD CSV WITH HEADERS FROM 'file:///tracks.csv'
+                AS row
+                CREATE (:Track {
+                    id: toInt(row.TrackId),
+                    name: row.Name,
+                    albumId: toInt(row.AlbumId),
+                    mediaTypeId: toInt(row.MediaTypeId),
+                    mediaTypeName: row.MediaTypeName,
+                    genreId: toInt(row.GenreId),
+                    genreName: row.GenreName,
+                    composer: row.Composer,
+                    ms: toInt(row.Milliseconds),
+                    bytes: toInt(row.Bytes),
+                    unitPrice: toFloat(row.UnitPrice)
+                }); 
+            '''
+            session.run(query)
+            session.run('CREATE INDEX ON :Track(id)')
 
     def query_genre_distribution_by_playlist(self):
         pass
