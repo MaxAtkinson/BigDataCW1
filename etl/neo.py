@@ -19,6 +19,50 @@ class NeoETL(ETL):
         self.transform_and_load_playlists()
         self.transform_and_load_artists()
         self.transform_and_load_albums()
+        self.transform_and_load_invoices()
+        self.transform_and_load_invoice_lines()
+
+    def transform_and_load_invoice_lines(self):
+        with db() as session:
+            session.run(f'''
+                USING PERIODIC COMMIT
+                LOAD CSV WITH HEADERS FROM 'file:///{constants.INVOICE_LINES_FILENAME}.csv'
+                AS row
+                CREATE (:InvoiceLine {{
+                    id: toInt(row.InvoiceLineId),
+                    invoiceId: toInt(row.InvoiceId),
+                    trackId: toInt(row.TrackId),
+                    unitPrice: toFload(row.UnitPrice),
+                    quantity: toInt(row.Quantity)
+                    total: toInt(row.Quantity)*toInt(row.unitPrice)
+                }})
+            ''')
+            session.run('CREATE INDEX ON :InvoiceLine(id)')
+            session.run('''
+                MATCH (il:InvoiceLine)
+                MATCH (in:Invoice) WHERE il.invoiceId = in.id
+                MERGE (il)-[:IN]->(in)
+            ''')
+
+
+    def transform_and_load_invoices(self):
+        with db() as session:
+            session.run(f'''
+                USING PERIODIC COMMIT
+                LOAD CSV WITH HEADERS FROM 'file:///{constants.INVOICES_FILENAME}.csv'
+                AS row
+                CREATE (:Invoice {{
+                    id: toInt(row.InvoiceId),
+                    customerId: toInt(row.CustomerId),
+                    invoiceDate: datetime(row.InvoiceDate),
+                    billingAddress: row.BillingAddress,
+                    billingState: row.BillingState,
+                    billingCountry: row.BillingCountry,
+                    billingPostalCode: row.BillingPostalCode,
+                    total: toFloat(row.Total),
+                }})
+            ''')
+            session.run('CREATE INDEX ON :Invoice(id)')
 
     def transform_and_load_albums(self):
         with db() as session:
