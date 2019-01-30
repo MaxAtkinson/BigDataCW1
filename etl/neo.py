@@ -33,8 +33,7 @@ class NeoETL(ETL):
                     invoiceId: toInt(row.InvoiceId),
                     trackId: toInt(row.TrackId),
                     unitPrice: toFloat(row.UnitPrice),
-                    quantity: toInt(row.Quantity),
-                    total: toInt(row.Quantity)*toInt(row.unitPrice)
+                    quantity: toInt(row.Quantity)
                 }})
             ''')
             session.run('CREATE INDEX ON :InvoiceLine(id)')
