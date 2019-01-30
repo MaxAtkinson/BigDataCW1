@@ -17,6 +17,40 @@ class NeoETL(ETL):
             p = os.popen('ln ./data/mongo/* /var/lib/neo4j/import')
         self.transform_and_load_tracks()
         self.transform_and_load_playlists()
+        self.transform_and_load_artists()
+        self.transform_and_load_albums()
+
+    def transform_and_load_albums(self):
+        with db() as session:
+            session.run(f'''
+                USING PERIODIC COMMIT
+                LOAD CSV WITH HEADERS FROM 'file:///{constants.ALBUMS_FILENAME}.csv'
+                AS row
+                CREATE (:Album {{
+                    id: toInt(row.AlbumId),
+                    title: row.Title,
+                    artistId: toInt(row.ArtistId)
+                }});
+            ''')
+            session.run('CREATE INDEX ON :Album(id)')
+            session.run('''
+                MATCH (ar:Artist)
+                MATCH (al:Album) WHERE al.artistId = ar.id
+                MERGE (al)-[:BY]->(ar)
+            ''')
+
+    def transform_and_load_artists(self):
+        with db() as session:
+            session.run(f'''
+                USING PERIODIC COMMIT
+                LOAD CSV WITH HEADERS FROM 'file:///{constants.ARTISTS_FILENAME}.csv'
+                AS row
+                CREATE (:Artist {{
+                    id: toInt(row.ArtistId),
+                    name: row.Name
+                }})
+            ''')
+            session.run('CREATE INDEX ON :Artist(id)')
 
     def transform_and_load_tracks(self):
         with db() as session:
