@@ -32,8 +32,8 @@ class NeoETL(ETL):
                     id: toInt(row.InvoiceLineId),
                     invoiceId: toInt(row.InvoiceId),
                     trackId: toInt(row.TrackId),
-                    unitPrice: toFload(row.UnitPrice),
-                    quantity: toInt(row.Quantity)
+                    unitPrice: toFloat(row.UnitPrice),
+                    quantity: toInt(row.Quantity),
                     total: toInt(row.Quantity)*toInt(row.unitPrice)
                 }})
             ''')
@@ -54,12 +54,12 @@ class NeoETL(ETL):
                 CREATE (:Invoice {{
                     id: toInt(row.InvoiceId),
                     customerId: toInt(row.CustomerId),
-                    invoiceDate: datetime(row.InvoiceDate),
+                    invoiceDate: datetime(Replace(row.InvoiceDate, ' ', 'T') + 'Z'),
                     billingAddress: row.BillingAddress,
                     billingState: row.BillingState,
                     billingCountry: row.BillingCountry,
                     billingPostalCode: row.BillingPostalCode,
-                    total: toFloat(row.Total),
+                    total: toFloat(row.Total)
                 }})
             ''')
             session.run('CREATE INDEX ON :Invoice(id)')
