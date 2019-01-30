@@ -54,7 +54,7 @@ class NeoETL(ETL):
                 CREATE (:Invoice {{
                     id: toInt(row.InvoiceId),
                     customerId: toInt(row.CustomerId),
-                    invoiceDate: datetime(Replace(row.InvoiceDate, ' ', 'T') + 'Z'),
+                    date: substring(row.InvoiceDate,0,10),
                     billingAddress: row.BillingAddress,
                     billingState: row.BillingState,
                     billingCountry: row.BillingCountry,
