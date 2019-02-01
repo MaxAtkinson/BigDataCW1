@@ -21,6 +21,75 @@ class NeoETL(ETL):
         self.transform_and_load_albums()
         self.transform_and_load_invoices()
         self.transform_and_load_invoice_lines()
+        self.transform_and_load_customers()
+        self.transform_and_load_employees()
+
+    def transform_and_load_employees(self):
+        with db() as session:
+            session.run(f'''
+                USING PERIODIC COMMIT
+                LOAD CSV WITH HEADERS FROM 'file:///{constants.EMPLOYEES_FILENAME}.csv'
+                AS row
+                CREATE (:Employee {{
+                    id: toInt(row.EmployeeId),
+                    lastName: row.LastName,
+                    firstName: row.FirstName,
+                    title: row.Title,
+                    reportsTo: toInt(row.ReportsTo),
+                    birthDate: substring(row.BirthDate,0,10),
+                    hireDate: substring(row.HireDate,0,10),
+                    address: row.Address,
+                    city: row.City,
+                    state: row.State,
+                    country: row.Country,
+                    postalCode: row.PostalCode,
+                    phone: row.Phone,
+                    fax: row.Fax,
+                    email: row.Email
+                }})
+            ''')
+            session.run('''
+                CREATE INDEX ON :Employee(id)
+            ''')
+            session.run('''
+                MATCH (emp:Employee)
+                MATCH (cus:Customer) WHERE cus.supportRepId = emp.id
+                MERGE (cus)-[:SUPPORTED_BY]->(emp)
+            ''')
+            session.run('''
+                MATCH (emp:Employee)
+                MATCH (emp2:Employee) WHERE emp.reportsTo = emp2.id
+                MERGE (emp)-[:REPORTS_TO]->(emp2)
+            ''')
+
+    def transform_and_load_customers(self):
+        with db() as session:
+            session.run(f'''
+                USING PERIODIC COMMIT
+                LOAD CSV WITH HEADERS FROM 'file:///{constants.CUSTOMERS_FILENAME}.csv'
+                AS row
+                CREATE (:Customer {{
+                    id: toInt(row.CustomerId),
+                    firstName: row.FirstName,
+                    lastName: row.LastName,
+                    company: row.Company,
+                    address: row.Address,
+                    city: row.City,
+                    state: row.State,
+                    country: row.Country,
+                    postalCode: row.PostalCode,
+                    phone: row.Phone,
+                    fax: row.Fax,
+                    email: row.Email,
+                    supportRepId: toInt(row.SupportRepId)
+                }})
+            ''')
+            session.run('CREATE INDEX ON :Customer(id)')
+            session.run('''
+                MATCH (cus:Customer)
+                MATCH (in:Invoice) WHERE in.customerId = cus.id
+                MERGE (in)-[:BILLED_TO]->(cus)
+            ''')
 
     def transform_and_load_invoice_lines(self):
         with db() as session:
@@ -41,6 +110,11 @@ class NeoETL(ETL):
                 MATCH (il:InvoiceLine)
                 MATCH (in:Invoice) WHERE il.invoiceId = in.id
                 MERGE (il)-[:IN]->(in)
+            ''')
+            session.run('''
+                MATCH (il:InvoiceLine)
+                MATCH (track:Track) WHERE il.trackId = track.id
+                MERGE (il)-[:FOR]->(track)
             ''')
 
 
