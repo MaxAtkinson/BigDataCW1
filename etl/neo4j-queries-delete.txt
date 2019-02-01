@@ -11,4 +11,6 @@ ORDER BY total DESC
 MATCH (p:Playlist)-[:CONTAINS]->(track:Track)
 MATCH (track2:Track)-[:ON]->(album:Album)-[:BY]->(ar:Artist)
 WHERE track2.id = track.id
-RETURN p
+WITH DISTINCT(ar) as artist, COUNT(track) as total
+RETURN artist, total
+ORDER BY total DESC
