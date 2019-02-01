@@ -155,6 +155,11 @@ class NeoETL(ETL):
                 MATCH (al:Album) WHERE al.artistId = ar.id
                 MERGE (al)-[:BY]->(ar)
             ''')
+            session.run('''
+                MATCH (track:Track)
+                MATCH (al:Album) WHERE track.albumId = al.id
+                MERGE (track)-[:ON]->(al)
+            ''')
 
     def transform_and_load_artists(self):
         with db() as session:

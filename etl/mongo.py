@@ -234,15 +234,11 @@ class MongoETL(ETL):
         db[collection].insert_one(document)
 
     def query_genre_distribution_by_playlist(self):
-        playlist_name = input('''Don't know if you'll like this playlist?\nEnter a playlist name to see the genre distribution:\n''')
         try:
             genre_distribution_for_playlist = db.playlists.aggregate([
                 {
                     '$match': {
-                        'name': {
-                            '$regex' : playlist_name,
-                            '$options': 'i'
-                        }
+                        'name': 1
                     }
                 },
                 {
@@ -264,9 +260,9 @@ class MongoETL(ETL):
                 }
             ])
             for x in genre_distribution_for_playlist:
-                print(f'There are {x["count"]} {x["_id"]} songs in the "{playlist_name}" playlist.')
+                pp = pprint.PrettyPrinter(indent=4)
+                pp.pprint(x)
         except Exception:
-            print('Invalid input, please try again:')
             self.query_genre_distribution_by_playlist()
 
     def query2(self):

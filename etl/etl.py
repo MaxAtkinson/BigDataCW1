@@ -47,4 +47,4 @@ class ETL(ABC):
     def run(self):
         self.extract()
         self.transform_and_load()
-        # self.queries()
+        self.queries()

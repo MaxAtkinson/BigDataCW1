@@ -1,0 +1,14 @@
+MATCH (p:Playlist {id: 1})-[:CONTAINS]->(t:Track)
+WITH DISTINCT(t.genreName) as c, COUNT(t) as size
+RETURN c, size
+ORDER BY size DESC
+
+MATCH (emp:Employee)<-[:SUPPORTED_BY]-(cus:Customer)<-[:BILLED_TO]-(i:Invoice)
+WITH DISTINCT(emp) as employee, sum(i.total) as total
+RETURN employee, total
+ORDER BY total DESC
+
+MATCH (p:Playlist)-[:CONTAINS]->(track:Track)
+MATCH (track2:Track)-[:ON]->(album:Album)-[:BY]->(ar:Artist)
+WHERE track2.id = track.id
+RETURN p
