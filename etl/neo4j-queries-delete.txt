@@ -8,9 +8,13 @@ WITH DISTINCT(emp) as employee, sum(i.total) as total
 RETURN employee, total
 ORDER BY total DESC
 
-MATCH (p:Playlist)-[:CONTAINS]->(track:Track)
-MATCH (track2:Track)-[:ON]->(album:Album)-[:BY]->(ar:Artist)
-WHERE track2.id = track.id
+MATCH (p:Playlist)-[:CONTAINS]->(track:Track)-[:ON]->(album:Album)-[:BY]->(ar:Artist)
 WITH DISTINCT(ar) as artist, COUNT(track) as total
 RETURN artist, total
 ORDER BY total DESC
+
+MATCH (t:Track)<-[:FOR]-(il:InvoiceLine)
+WITH DISTINCT(t) as track, SUM(il.unitPrice * il.quantity) as total
+RETURN total, track
+ORDER BY total DESC
+
