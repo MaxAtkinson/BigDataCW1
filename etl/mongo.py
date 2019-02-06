@@ -356,7 +356,52 @@ class MongoETL(ETL):
             self.query3()        
 
     def query4(self):
-        pass
+        try:
+            most_playlisted_artist = db.playlists.aggregate([
+                {
+                    '$unwind': '$trackIds'
+                },
+                {
+                    '$lookup': {
+                        'from': 'tracks',
+                        'as': 'tracks',
+                        'localField': 'trackIds',
+                        'foreignField': '_id'
+                    }  
+                },
+                {
+                    '$lookup': {
+                        'from': 'artists',
+                        'as': 'artists',
+                        'localField': 'tracks.albumId',
+                        'foreignField': 'albums._id'
+                    }  
+                },
+                {
+                    '$unwind': '$artists'
+                },
+                {
+                    '$group': {
+                        '_id': '$artists._id',
+                        'count': {
+                            '$sum' : 1
+                        }
+                    }
+                },
+                {
+                    '$sort': {
+                        'count': -1
+                    }
+                },
+                {
+                    '$limit': 10
+                }
+            ])
+            for x in most_playlisted_artist:
+                pp = pprint.PrettyPrinter(indent=4)
+                pp.pprint(x)
+        except Exception:
+            self.query4() 
 
     def query5(self):
         pass
