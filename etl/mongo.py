@@ -238,7 +238,7 @@ class MongoETL(ETL):
             genre_distribution_for_playlist = db.playlists.aggregate([
                 {
                     '$match': {
-                        'name': 1
+                        '_id': 1
                     }
                 },
                 {
@@ -266,10 +266,94 @@ class MongoETL(ETL):
             self.query_genre_distribution_by_playlist()
 
     def query2(self):
-        pass
-
+        try:
+            best_employee = db.employees.aggregate([
+                {
+                    '$lookup': { 
+                        'from': 'customers',
+                        'as': 'customers',
+                        'localField': '_id',
+                        'foreignField': 'supportRepId' 
+                    }
+                },
+                {
+                    '$unwind': '$customers'
+                },
+                {
+                    '$lookup': {
+                        'from': 'invoices',
+                        'as': 'invoices',
+                        'localField': 'customers._id',
+                        'foreignField': 'customerId'
+                    }
+                },
+                {
+                    '$unwind': '$invoices'
+                },
+                {
+                    '$group': {
+                        '_id': '$_id',
+                        'total': {
+                            '$sum' : '$invoices.total' 
+                        }
+                    }
+                },
+                {
+                    '$sort': {
+                        'total': -1
+                    }
+                },
+                {
+                    '$limit': 1
+                }
+            ])
+            for x in best_employee:
+                pp = pprint.PrettyPrinter(indent=4)
+                pp.pprint(x)
+        except Exception:
+            self.query2()
+    
     def query3(self):
-        pass
+        try:
+            best_track = db.invoices.aggregate([
+                {
+                    '$unwind': '$invoiceLines'
+                },
+                {
+                    '$lookup': {
+                        'from': 'tracks',
+                        'as': 'tracks',
+                        'localField': 'invoiceLines.trackId',
+                        'foreignField': '_id'
+                    }  
+                },
+                {
+                    '$unwind': '$tracks'
+                },
+                {
+                    '$group': {
+                        '_id': '$tracks._id',
+                        'total': {
+                            '$sum' : {
+                                '$multiply': ['$invoiceLines.quantity', '$invoiceLines.unitPrice']
+                            } 
+                        }
+                    }
+                },
+                {
+                    '$sort': {
+                        'total': -1
+                    }
+                },
+                {
+                    '$limit': 10
+                }
+            ])
+            for x in best_track:
+                pp = pprint.PrettyPrinter(indent=4)
+                pp.pprint(x)
+        except Exception:
+            self.query3()        
 
     def query4(self):
         pass
