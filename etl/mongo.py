@@ -404,6 +404,78 @@ class MongoETL(ETL):
             self.query4() 
 
     def query5(self):
-        pass
+        favourite_artist_by_region = db.invoices.aggregate([
+            {
+                '$unwind': '$invoiceLines'
+            },
+            {
+                '$lookup': {
+                    'from': 'tracks',
+                    'as': 'tracks',
+                    'localField': 'invoiceLines.trackId',
+                    'foreignField': '_id'
+                }  
+            },
+            {
+                '$unwind': '$tracks'
+            },
+            {
+                '$lookup': {
+                    'from': 'artists',
+                    'as': 'artists',
+                    'localField': 'tracks.albumId',
+                    'foreignField': 'albums._id'
+                }  
+            },
+            {
+                '$unwind': '$artists'
+            },
+            {
+                '$group': {
+                    '_id': {
+                        'country': '$billingCountry',
+                        'artists': '$artists._id',
+                        'name': '$artists.name'
 
-
+                    },
+                    'total': {
+                        '$sum': 1
+                    }
+                }
+            },
+            {
+                '$group': {
+                    '_id': '$_id.country',
+                    'details': {
+                        '$push': {
+                            'total':'$total',
+                            'artist': '$_id.artists',
+                            'name': '$_id.name'
+                        }
+                    }
+                } 
+            },
+            {'$project': 
+                {
+                    '_id': 1,
+                    'maxPerCountry': {
+                        "$max": "$details.total"
+                    },
+                    'details': 1
+                }
+            },
+            { '$project': 
+                {
+                'topArtists': {
+                    '$filter': {
+                        'input': "$details",
+                        'as': "details",
+                        'cond': { '$gte': [ "$$details.total", '$maxPerCountry' ] }
+                        }
+                    }
+                }
+            }
+        ])
+        for x in favourite_artist_by_region:
+            pp = pprint.PrettyPrinter(indent=4)
+            pp.pprint(x)            

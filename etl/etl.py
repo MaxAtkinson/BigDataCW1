@@ -38,9 +38,9 @@ class ETL(ABC):
         pass
 
     def queries(self):
-        # self.query_genre_distribution_by_playlist()
-        # self.query2()
-        # self.query3()
+        self.query_genre_distribution_by_playlist()
+        self.query2()
+        self.query3()
         self.query4()
         self.query5()
 
