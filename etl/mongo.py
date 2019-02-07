@@ -143,12 +143,11 @@ class MongoETL(ETL):
                 self.load(constants.ARTISTS_FILENAME, artist)
 
     def load(self, collection, document):
+        ''' Utility method for loading into MongoDB collections simply. '''
         db[collection].insert_one(document)
 
     def query_genre_distribution_by_playlist(self, playlist_id=1):
-        '''
-        Given a playlist id, this query will give the distribution of different genres in the playlist, sorted descending.
-        '''
+        ''' Given a playlist id, this query will give the distribution of different genres in the playlist, sorted descending. '''
         genre_distribution_for_playlist = db.playlists.aggregate([
             # Match playlist on some id.
             {
@@ -182,9 +181,7 @@ class MongoETL(ETL):
             print(f'This playlist contains {row['count']} {row['_id']} songs.')
 
     def best_employee(self):
-        '''
-        This query will find the employee who has brought in the most revenue.
-        '''
+        ''' This query will find the employee who has brought in the most revenue. '''
         best_employee = db.employees.aggregate([
             # 'Join' from employee to customers on supportRepId.
             {

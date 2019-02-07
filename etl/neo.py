@@ -4,8 +4,10 @@ from etl.etl import ETL
 from db.neo import db
 
 class NeoETL(ETL):
+    ''' ETL class for transforming and loading data into our Neo4j schema. '''
 
     def transform_and_load(self):
+        ''' Starts the transformation and loading process into our Neo4j schema. '''
         if not os.path.isfile('/var/lib/neo4j/import/tracks.csv'):
             p = os.popen('ln ./data/* /var/lib/neo4j/import')
         self.transform_and_load_tracks()
@@ -211,16 +213,21 @@ class NeoETL(ETL):
             ''')
 
     def query_genre_distribution_by_playlist(self):
+        ''' Given a playlist id, this query will give the distribution of different genres in the playlist, sorted descending. '''
         pass
 
     def best_employee(self):
+        ''' This query will find the employee who has brought in the most revenue. '''
         pass
 
     def highest_grossing_tracks(self):
+        ''' This query will find the 10 highest grossing tracks. '''
         pass
 
     def most_playlisted_artists(self):
+        ''' This query will find the top 10 most playlisted artists. '''
         pass
 
     def favourite_artist_by_region(self):
+        ''' This query will display the favourite artist for each invoice region. '''
         pass
