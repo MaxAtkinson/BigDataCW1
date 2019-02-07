@@ -7,11 +7,9 @@ Group Members:
 - Stamatis Tiniakos
 - Robert Rand
 
-## ETL Abstract Class
-About...
-
-## MongoETL Class
-About...
-
-## NeoETL Class
-About...
+## Usage
+- Open provided virtual machine
+- Clone this repository
+- `cd BigDataCW1`
+- `pip3 install -r requirements.txt`
+- `sudo python3 run.py`

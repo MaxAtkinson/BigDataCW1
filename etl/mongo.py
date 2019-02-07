@@ -7,98 +7,10 @@ from dateutil.parser import parse
 import constants
 
 class MongoETL(ETL):
-
-    def extract_tracks(self):
-        cursor.execute('''
-            SELECT t.*,
-                m.Name AS MediaTypeName,
-                g.Name AS GenreName
-            FROM Track t, Genre g, MediaType m
-            WHERE t.GenreId = g.GenreId
-            AND t.MediaTypeId = m.MediaTypeId
-            ORDER BY t.TrackId;''')
-        self.write_query_to_file(cursor, constants.TRACKS_FILENAME)
-
-    def extract_playlists(self):
-        cursor.execute('''
-            SELECT p.*,
-                COUNT(pt.TrackId) AS NumTracks
-            FROM Playlist p
-            LEFT JOIN PlaylistTrack pt
-            ON (p.PlaylistId = pt.PlaylistId)
-            GROUP BY p.PlaylistId
-            ORDER BY p.PlaylistId;''')
-        self.write_query_to_file(cursor, constants.PLAYLISTS_FILENAME)
-
-    def extract_playlist_tracks(self):
-        cursor.execute('''
-            SELECT *
-            FROM PlaylistTrack
-            ORDER BY PlaylistId;''')
-        self.write_query_to_file(cursor, constants.PLAYLIST_TRACKS_FILENAME)
-
-    def extract_invoices(self):
-        cursor.execute('''
-            SELECT i.*,
-                COUNT(il.InvoiceId) AS NumLines
-            FROM Invoice i, InvoiceLine il
-            WHERE i.InvoiceId = il.InvoiceId
-            GROUP BY i.InvoiceId
-            ORDER BY i.InvoiceId;''')
-        self.write_query_to_file(cursor, constants.INVOICES_FILENAME)
-
-    def extract_employees(self):
-        cursor.execute('''
-            SELECT *
-            FROM Employee e
-            ORDER BY e.EmployeeId;''')
-        self.write_query_to_file(cursor, constants.EMPLOYEES_FILENAME)
-
-
-    def extract_customers(self):
-        cursor.execute('''
-            SELECT *
-            FROM Customer c
-            ORDER BY c.CustomerId;''')
-        self.write_query_to_file(cursor, constants.CUSTOMERS_FILENAME)
-
-    def extract_albums(self):
-        cursor.execute('''
-            SELECT *
-            FROM Album
-            ORDER BY ArtistId;''')
-        self.write_query_to_file(cursor, constants.ALBUMS_FILENAME)
-
-    def extract_artists(self):
-        cursor.execute('''
-            SELECT ar.*,
-                COUNT(al.ArtistId) AS NumAlbums
-            FROM Artist ar
-            LEFT JOIN Album al
-            ON (ar.ArtistId = al.ArtistId)
-            GROUP BY ar.ArtistId
-            ORDER BY ar.ArtistId;''')
-        self.write_query_to_file(cursor, constants.ARTISTS_FILENAME)
-
-    def extract_invoice_lines(self):
-        cursor.execute('''
-            SELECT *
-            FROM InvoiceLine
-            ORDER BY InvoiceId;''')
-        self.write_query_to_file(cursor, constants.INVOICE_LINES_FILENAME)
-
-    def extract(self):
-        self.extract_tracks()
-        self.extract_playlists()
-        self.extract_playlist_tracks()
-        self.extract_artists()
-        self.extract_albums()
-        self.extract_invoices()
-        self.extract_invoice_lines()
-        self.extract_customers()
-        self.extract_employees()
+    ''' ETL class for transforming and loading data into our MongoDB schema. '''
 
     def transform_and_load(self):
+        ''' Starts the transformation and loading process into our MongoDB schema. '''
         self.transform_and_load_tracks()
         self.transform_and_load_playlists()
         self.transform_and_load_artists()
@@ -107,7 +19,7 @@ class MongoETL(ETL):
         self.transform_and_load_employees()
 
     def transform_and_load_employees(self):
-        with open(f'data/mongo/{constants.EMPLOYEES_FILENAME}.csv', 'r') as f:
+        with open(f'data/{constants.EMPLOYEES_FILENAME}.csv', 'r') as f:
             def first_lower(s): return s[0].lower() + s[1:]
             reader = csv.reader(f)
             headers = [first_lower(header) for header in next(reader)]
@@ -121,7 +33,7 @@ class MongoETL(ETL):
                 self.load(constants.EMPLOYEES_FILENAME, employee)
 
     def transform_and_load_customers(self):
-        with open(f'data/mongo/{constants.CUSTOMERS_FILENAME}.csv', 'r') as f:
+        with open(f'data/{constants.CUSTOMERS_FILENAME}.csv', 'r') as f:
             reader = csv.reader(f)
             customer_headers = next(reader)
             for row in reader:
@@ -142,8 +54,8 @@ class MongoETL(ETL):
                 self.load(constants.CUSTOMERS_FILENAME, customer)
 
     def transform_and_load_invoices(self):
-        invoice_path = f'data/mongo/{constants.INVOICES_FILENAME}.csv'
-        invoice_lines_path = f'data/mongo/{constants.INVOICE_LINES_FILENAME}.csv'
+        invoice_path = f'data/{constants.INVOICES_FILENAME}.csv'
+        invoice_lines_path = f'data/{constants.INVOICE_LINES_FILENAME}.csv'
         with open(invoice_path, 'r') as i, open(invoice_lines_path) as il:
             invoice_reader, invoice_lines_reader = csv.reader(i), csv.reader(il)
             invoice_headers, invoice_lines_headers = next(invoice_reader), next(invoice_lines_reader)
@@ -173,7 +85,7 @@ class MongoETL(ETL):
                 self.load(constants.INVOICES_FILENAME, invoice)
     
     def transform_and_load_tracks(self):
-        with open(f'data/mongo/{constants.TRACKS_FILENAME}.csv', 'r') as f:
+        with open(f'data/{constants.TRACKS_FILENAME}.csv', 'r') as f:
             reader = csv.reader(f)
             headers = next(reader)
             for row in reader:
@@ -196,8 +108,8 @@ class MongoETL(ETL):
                 self.load(constants.TRACKS_FILENAME, track)
 
     def transform_and_load_playlists(self):
-        playlist_path = f'data/mongo/{constants.PLAYLISTS_FILENAME}.csv'
-        playlist_track_path = f'data/mongo/{constants.PLAYLIST_TRACKS_FILENAME}.csv'
+        playlist_path = f'data/{constants.PLAYLISTS_FILENAME}.csv'
+        playlist_track_path = f'data/{constants.PLAYLIST_TRACKS_FILENAME}.csv'
         with open(playlist_path, 'r') as p, open(playlist_track_path) as pt:
             playlist_reader, playlist_tracks_reader = csv.reader(p), csv.reader(pt)
             playlist_headers, playlist_tracks_headers = next(playlist_reader), next(playlist_tracks_reader)
@@ -212,8 +124,8 @@ class MongoETL(ETL):
                 self.load(constants.PLAYLISTS_FILENAME, playlist)
 
     def transform_and_load_artists(self):
-        artists_path = f'data/mongo/{constants.ARTISTS_FILENAME}.csv'
-        albums_path = f'data/mongo/{constants.ALBUMS_FILENAME}.csv'
+        artists_path = f'data/{constants.ARTISTS_FILENAME}.csv'
+        albums_path = f'data/{constants.ALBUMS_FILENAME}.csv'
         with open(artists_path, 'r') as ar, open(albums_path) as al:
             artist_reader, album_reader = csv.reader(ar), csv.reader(al)
             artist_headers, album_headers = next(artist_reader), next(album_reader)
@@ -233,177 +145,195 @@ class MongoETL(ETL):
     def load(self, collection, document):
         db[collection].insert_one(document)
 
-    def query_genre_distribution_by_playlist(self):
-        try:
-            genre_distribution_for_playlist = db.playlists.aggregate([
-                {
-                    '$match': {
-                        '_id': 1
-                    }
-                },
-                {
-                    '$lookup': {
-                        'from': 'tracks',
-                        'as': 'tracks',
-                        'localField': 'trackIds',
-                        'foreignField': '_id'
-                    }
-                },
-                {
-                    '$project': {'trackIds': False}
-                },
-                {
-                    '$unwind': '$tracks'
-                },
-                {
-                    '$sortByCount': '$tracks.genre.name'
+    def query_genre_distribution_by_playlist(self, playlist_id=1):
+        '''
+        Given a playlist id, this query will give the distribution of different genres in the playlist, sorted descending.
+        '''
+        genre_distribution_for_playlist = db.playlists.aggregate([
+            # Match playlist on some id.
+            {
+                '$match': {
+                    '_id': playlist_id
                 }
-            ])
-            for x in genre_distribution_for_playlist:
-                pp = pprint.PrettyPrinter(indent=4)
-                pp.pprint(x)
-        except Exception:
-            self.query_genre_distribution_by_playlist()
+            },
+            # 'Join' the tracks table using playlists.trackIds.
+            {
+                '$lookup': {
+                    'from': 'tracks',
+                    'as': 'tracks',
+                    'localField': 'trackIds',
+                    'foreignField': '_id'
+                }
+            },
+            # Remove the trackIds field - we have no use for it now, the join is done.
+            {
+                '$project': {'trackIds': False}
+            },
+            # Unwind (flatten) the tracks array from our $lookup.
+            {
+                '$unwind': '$tracks'
+            },
+            # Groups by genre name and sorts by the count descending.
+            {
+                '$sortByCount': '$tracks.genre.name'
+            }
+        ])
+        for row in genre_distribution_for_playlist:
+            print(f'This playlist contains {row['count']} {row['_id']} songs.')
 
-    def query2(self):
-        try:
-            best_employee = db.employees.aggregate([
-                {
-                    '$lookup': { 
-                        'from': 'customers',
-                        'as': 'customers',
-                        'localField': '_id',
-                        'foreignField': 'supportRepId' 
-                    }
-                },
-                {
-                    '$unwind': '$customers'
-                },
-                {
-                    '$lookup': {
-                        'from': 'invoices',
-                        'as': 'invoices',
-                        'localField': 'customers._id',
-                        'foreignField': 'customerId'
-                    }
-                },
-                {
-                    '$unwind': '$invoices'
-                },
-                {
-                    '$group': {
-                        '_id': '$_id',
-                        'total': {
-                            '$sum' : '$invoices.total' 
-                        }
-                    }
-                },
-                {
-                    '$sort': {
-                        'total': -1
-                    }
-                },
-                {
-                    '$limit': 1
+    def best_employee(self):
+        '''
+        This query will find the employee who has brought in the most revenue.
+        '''
+        best_employee = db.employees.aggregate([
+            # 'Join' from employee to customers on supportRepId.
+            {
+                '$lookup': { 
+                    'from': 'customers',
+                    'as': 'customers',
+                    'localField': '_id',
+                    'foreignField': 'supportRepId' 
                 }
-            ])
-            for x in best_employee:
-                pp = pprint.PrettyPrinter(indent=4)
-                pp.pprint(x)
-        except Exception:
-            self.query2()
+            },
+            # Unwind (flatten) the customers array from $lookup.
+            {
+                '$unwind': '$customers'
+            },
+            # 'Join' onto invoices from customers.
+            {
+                '$lookup': {
+                    'from': 'invoices',
+                    'as': 'invoices',
+                    'localField': 'customers._id',
+                    'foreignField': 'customerId'
+                }
+            },
+            # Unwind (flatten) the invoices array from $lookup.
+            {
+                '$unwind': '$invoices'
+            },
+            # Group by employee, sum their total invoices.
+            {
+                '$group': {
+                    '_id': '$_id',
+                    'total': {
+                        '$sum' : '$invoices.total' 
+                    }
+                }
+            },
+            # Sort by the aggregate sum descending.
+            {
+                '$sort': {
+                    'total': -1
+                }
+            },
+            # Return only the best employee.
+            {
+                '$limit': 1
+            }
+        ])
+        for row in best_employee:
+            print(f'The best employee is #{row['_id']}.')
     
-    def query3(self):
-        try:
-            best_track = db.invoices.aggregate([
-                {
-                    '$unwind': '$invoiceLines'
-                },
-                {
-                    '$lookup': {
-                        'from': 'tracks',
-                        'as': 'tracks',
-                        'localField': 'invoiceLines.trackId',
-                        'foreignField': '_id'
-                    }  
-                },
-                {
-                    '$unwind': '$tracks'
-                },
-                {
-                    '$group': {
-                        '_id': '$tracks._id',
-                        'total': {
-                            '$sum' : {
-                                '$multiply': ['$invoiceLines.quantity', '$invoiceLines.unitPrice']
-                            } 
-                        }
+    def highest_grossing_trackss(self):
+        ''' This query will find the 10 highest grossing tracks. '''
+        best_tracks = db.invoices.aggregate([
+            # Unwind (flatten) invoiceLines array.
+            {
+                '$unwind': '$invoiceLines'
+            },
+            # 'Join' onto the tracks table using trackId.
+            {
+                '$lookup': {
+                    'from': 'tracks',
+                    'as': 'tracks',
+                    'localField': 'invoiceLines.trackId',
+                    'foreignField': '_id'
+                }  
+            },
+            # Unwind (flatten) tracks array from $lookup.
+            {
+                '$unwind': '$tracks'
+            },
+            # Group by the track id and calculate the total generated by all invoice lines of that track.
+            {
+                '$group': {
+                    '_id': '$tracks._id',
+                    'total': {
+                        '$sum' : {
+                            '$multiply': ['$invoiceLines.quantity', '$invoiceLines.unitPrice']
+                        } 
                     }
-                },
-                {
-                    '$sort': {
-                        'total': -1
-                    }
-                },
-                {
-                    '$limit': 10
                 }
-            ])
-            for x in best_track:
-                pp = pprint.PrettyPrinter(indent=4)
-                pp.pprint(x)
-        except Exception:
-            self.query3()        
-
-    def query4(self):
-        try:
-            most_playlisted_artist = db.playlists.aggregate([
-                {
-                    '$unwind': '$trackIds'
-                },
-                {
-                    '$lookup': {
-                        'from': 'tracks',
-                        'as': 'tracks',
-                        'localField': 'trackIds',
-                        'foreignField': '_id'
-                    }  
-                },
-                {
-                    '$lookup': {
-                        'from': 'artists',
-                        'as': 'artists',
-                        'localField': 'tracks.albumId',
-                        'foreignField': 'albums._id'
-                    }  
-                },
-                {
-                    '$unwind': '$artists'
-                },
-                {
-                    '$group': {
-                        '_id': '$artists._id',
-                        'count': {
-                            '$sum' : 1
-                        }
-                    }
-                },
-                {
-                    '$sort': {
-                        'count': -1
-                    }
-                },
-                {
-                    '$limit': 10
+            },
+            # Sort by the aggregate sum descending.
+            {
+                '$sort': {
+                    'total': -1
                 }
-            ])
-            for x in most_playlisted_artist:
-                pp = pprint.PrettyPrinter(indent=4)
-                pp.pprint(x)
-        except Exception:
-            self.query4() 
+            },
+            # Take the top 10 grossing tracks.
+            {
+                '$limit': 10
+            }
+        ])
+        for row in best_track:
+            print(f'Track #{row['_id']} generated £{row['total']}.')
 
-    def query5(self):
+    def most_playlisted_artists(self):
+        ''' This query will find the top 10 most playlisted artists. '''
+        most_playlisted_artists = db.playlists.aggregate([
+            # Unwind (flatten) the trackIds array.
+            {
+                '$unwind': '$trackIds'
+            },
+            # 'Join' the tracks playlist on trackIds.
+            {
+                '$lookup': {
+                    'from': 'tracks',
+                    'as': 'tracks',
+                    'localField': 'trackIds',
+                    'foreignField': '_id'
+                }  
+            },
+            # 'Join' the artists collection using tracks.albumId.
+            {
+                '$lookup': {
+                    'from': 'artists',
+                    'as': 'artists',
+                    'localField': 'tracks.albumId',
+                    'foreignField': 'albums._id'
+                }  
+            },
+            # Unwind (flatten) the artists array from $lookup.
+            {
+                '$unwind': '$artists'
+            },
+            # Group by artist id, count the artists appearance.
+            {
+                '$group': {
+                    '_id': '$artists._id',
+                    'count': {
+                        '$sum' : 1
+                    }
+                }
+            },
+            # Sort by the aggregate count descending.
+            {
+                '$sort': {
+                    'count': -1
+                }
+            },
+            # Return the top 10.
+            {
+                '$limit': 10
+            }
+        ])
+        for row in most_playlisted_artists:
+            print(f'Artist #{row['_id']} has been playlisted {row['count']} times.')
+
+    def favourite_artist_by_region(self):
+        ''' This query will display the favourite artist for each invoice region. '''
         favourite_artist_by_region = db.invoices.aggregate([
             {
                 '$unwind': '$invoiceLines'
@@ -436,7 +366,6 @@ class MongoETL(ETL):
                         'country': '$billingCountry',
                         'artists': '$artists._id',
                         'name': '$artists.name'
-
                     },
                     'total': {
                         '$sum': 1
@@ -477,5 +406,6 @@ class MongoETL(ETL):
             }
         ])
         for x in favourite_artist_by_region:
+            # TODO: print like others
             pp = pprint.PrettyPrinter(indent=4)
             pp.pprint(x)            

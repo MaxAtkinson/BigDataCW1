@@ -5,16 +5,9 @@ from db.neo import db
 
 class NeoETL(ETL):
 
-    def extract(self):
-        pass
-
     def transform_and_load(self):
-        # with db() as session:
-
-        #     session.run('MATCH (t:Track) DELETE t')
-        #     session.run('MATCH (p:Playlist) DELETE p')
         if not os.path.isfile('/var/lib/neo4j/import/tracks.csv'):
-            p = os.popen('ln ./data/mongo/* /var/lib/neo4j/import')
+            p = os.popen('ln ./data/* /var/lib/neo4j/import')
         self.transform_and_load_tracks()
         self.transform_and_load_playlists()
         self.transform_and_load_artists()
@@ -220,14 +213,14 @@ class NeoETL(ETL):
     def query_genre_distribution_by_playlist(self):
         pass
 
-    def query2(self):
+    def best_employee(self):
         pass
 
-    def query3(self):
+    def highest_grossing_tracks(self):
         pass
 
-    def query4(self):
+    def most_playlisted_artists(self):
         pass
 
-    def query5(self):
+    def favourite_artist_by_region(self):
         pass
