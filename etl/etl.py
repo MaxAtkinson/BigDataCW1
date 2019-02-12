@@ -1,11 +1,13 @@
 import csv
 from abc import ABC, abstractmethod
+from db.mysql import cursor
+import constants
 
 class ETL(ABC):
     ''' Abstract base class for ETL jobs to improve scalability. To perform a new ETL job, subclass this. '''
 
     @staticmethod
-    def write_query_to_file(self, cursor, entity_name):
+    def write_query_to_file(cursor, entity_name):
         with open(f'data/{entity_name}.csv', 'w') as f:
             writer = csv.writer(f)
             writer.writerow(cursor.column_names)
@@ -13,7 +15,7 @@ class ETL(ABC):
                 writer.writerow(row)
 
     @staticmethod
-    def extract_tracks(self):
+    def extract_tracks():
         cursor.execute('''
             SELECT t.*,
                 m.Name AS MediaTypeName,
@@ -25,7 +27,7 @@ class ETL(ABC):
         ETL.write_query_to_file(cursor, constants.TRACKS_FILENAME)
 
     @staticmethod
-    def extract_playlists(self):
+    def extract_playlists():
         cursor.execute('''
             SELECT p.*,
                 COUNT(pt.TrackId) AS NumTracks
@@ -37,7 +39,7 @@ class ETL(ABC):
         ETL.write_query_to_file(cursor, constants.PLAYLISTS_FILENAME)
 
     @staticmethod
-    def extract_playlist_tracks(self):
+    def extract_playlist_tracks():
         cursor.execute('''
             SELECT *
             FROM PlaylistTrack
@@ -45,7 +47,7 @@ class ETL(ABC):
         ETL.write_query_to_file(cursor, constants.PLAYLIST_TRACKS_FILENAME)
 
     @staticmethod
-    def extract_invoices(self):
+    def extract_invoices():
         cursor.execute('''
             SELECT i.*,
                 COUNT(il.InvoiceId) AS NumLines
@@ -56,7 +58,7 @@ class ETL(ABC):
         ETL.write_query_to_file(cursor, constants.INVOICES_FILENAME)
 
     @staticmethod
-    def extract_employees(self):
+    def extract_employees():
         cursor.execute('''
             SELECT *
             FROM Employee e
@@ -65,7 +67,7 @@ class ETL(ABC):
 
 
     @staticmethod
-    def extract_customers(self):
+    def extract_customers():
         cursor.execute('''
             SELECT *
             FROM Customer c
@@ -73,7 +75,7 @@ class ETL(ABC):
         ETL.write_query_to_file(cursor, constants.CUSTOMERS_FILENAME)
 
     @staticmethod
-    def extract_albums(self):
+    def extract_albums():
         cursor.execute('''
             SELECT *
             FROM Album
@@ -81,7 +83,7 @@ class ETL(ABC):
         ETL.write_query_to_file(cursor, constants.ALBUMS_FILENAME)
 
     @staticmethod
-    def extract_artists(self):
+    def extract_artists():
         cursor.execute('''
             SELECT ar.*,
                 COUNT(al.ArtistId) AS NumAlbums
@@ -93,7 +95,7 @@ class ETL(ABC):
         ETL.write_query_to_file(cursor, constants.ARTISTS_FILENAME)
 
     @staticmethod
-    def extract_invoice_lines(self):
+    def extract_invoice_lines():
         cursor.execute('''
             SELECT *
             FROM InvoiceLine
@@ -101,7 +103,7 @@ class ETL(ABC):
         ETL.write_query_to_file(cursor, constants.INVOICE_LINES_FILENAME)
 
     @staticmethod
-    def extract(self):
+    def extract():
         ''' Performs extraction of the MySQL database into .csv files ready for transformation. '''
         ETL.extract_tracks()
         ETL.extract_playlists()

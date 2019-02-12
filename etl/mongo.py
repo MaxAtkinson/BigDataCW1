@@ -178,7 +178,7 @@ class MongoETL(ETL):
             }
         ])
         for row in genre_distribution_for_playlist:
-            print(f'This playlist contains {row['count']} {row['_id']} songs.')
+            print(f'This playlist contains {row["count"]} {row["_id"]} songs.')
 
     def best_employee(self):
         ''' This query will find the employee who has brought in the most revenue. '''
@@ -230,9 +230,9 @@ class MongoETL(ETL):
             }
         ])
         for row in best_employee:
-            print(f'The best employee is #{row['_id']}.')
+            print(f'The best employee is #{row["_id"]}.')
     
-    def highest_grossing_trackss(self):
+    def highest_grossing_tracks(self):
         ''' This query will find the 10 highest grossing tracks. '''
         best_tracks = db.invoices.aggregate([
             # Unwind (flatten) invoiceLines array.
@@ -274,8 +274,8 @@ class MongoETL(ETL):
                 '$limit': 10
             }
         ])
-        for row in best_track:
-            print(f'Track #{row['_id']} generated £{row['total']}.')
+        for row in best_tracks:
+            print(f'Track #{row["_id"]} generated £{row["total"]}.')
 
     def most_playlisted_artists(self):
         ''' This query will find the top 10 most playlisted artists. '''
@@ -327,7 +327,7 @@ class MongoETL(ETL):
             }
         ])
         for row in most_playlisted_artists:
-            print(f'Artist #{row['_id']} has been playlisted {row['count']} times.')
+            print(f'Artist #{row["_id"]} has been playlisted {row["count"]} times.')
 
     def favourite_artist_by_region(self):
         ''' This query will display the favourite artist for each invoice region. '''
@@ -402,7 +402,6 @@ class MongoETL(ETL):
                 }
             }
         ])
-        for x in favourite_artist_by_region:
-            # TODO: print like others
-            pp = pprint.PrettyPrinter(indent=4)
-            pp.pprint(x)            
+        for row in favourite_artist_by_region:
+            artists = [artist['name'] for artist in row['topArtists']]
+            print(f'The most popular Artists in {row["_id"]} are {", ".join(artists)}.')

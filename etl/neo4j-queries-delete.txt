@@ -18,3 +18,8 @@ WITH DISTINCT(t) as track, SUM(il.unitPrice * il.quantity) as total
 RETURN total, track
 ORDER BY total DESC
 
+MATCH (c:Customer)<-[:BILLED_TO]-(i:Invoice)<-[:IN]-(il:InvoiceLine)-[:FOR]->(t:Track)-[:ON]->(al:Album)-[:BY]->(art:Artist)
+WITH distinct(i.billingCountry) as country, art.name as name, COUNT(i) as amount
+return country, max(amount)
+ORDER BY country
+
