@@ -309,7 +309,7 @@ class MongoETL(ETL):
             # Group by artist id, count the artists appearance.
             {
                 '$group': {
-                    '_id': '$artists._id',
+                    '_id': '$artists.name',
                     'count': {
                         '$sum' : 1
                     }
@@ -327,7 +327,7 @@ class MongoETL(ETL):
             }
         ])
         for row in most_playlisted_artists:
-            print(f'Artist #{row["_id"]} has been playlisted {row["count"]} times.')
+            print(f'Artist {row["_id"]} has been playlisted {row["count"]} times.')
 
     def favourite_artist_by_region(self):
         ''' This query will display the favourite artist for each invoice region. '''
