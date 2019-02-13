@@ -127,22 +127,22 @@ class ETL(ABC):
 
     @abstractmethod
     def best_employee(self):
-        ''' Abstract method to query ___________________. '''
+        ''' Abstract method to query best. '''
         pass
 
     @abstractmethod
     def highest_grossing_tracks(self):
-        ''' Abstract method to query ___________________. '''
+        ''' Abstract method to query highest grossing tracks. '''
         pass
 
     @abstractmethod
     def most_playlisted_artists(self):
-        ''' Abstract method to query ___________________. '''
+        ''' Abstract method to query most playlisted artists. '''
         pass
 
     @abstractmethod
     def favourite_artist_by_region(self):
-        ''' Abstract method to query ___________________. '''
+        ''' Abstract method to query favourite artist by region. '''
         pass
 
     def queries(self):

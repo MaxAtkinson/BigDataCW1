@@ -214,20 +214,68 @@ class NeoETL(ETL):
 
     def query_genre_distribution_by_playlist(self):
         ''' Given a playlist id, this query will give the distribution of different genres in the playlist, sorted descending. '''
-        pass
+        with db() as session:
+            response = session.run('''
+            MATCH (p:Playlist {id: 1})-[:CONTAINS]->(t:Track)
+            WITH DISTINCT(t.genreName) as genre, COUNT(t) as size
+            RETURN genre, size
+            ORDER BY size DESC''')
+            for node in response:
+                print('This playlist contains {size} {genre} songs.'.format(**node))
+
 
     def best_employee(self):
         ''' This query will find the employee who has brought in the most revenue. '''
-        pass
+        with db() as session:
+            response = session.run('''
+            MATCH (emp:Employee)<-[:SUPPORTED_BY]-(cus:Customer)<-[:BILLED_TO]-(i:Invoice)
+            WITH DISTINCT(emp) as employee, sum(i.total) as total
+            RETURN employee.id as employee, total
+            ORDER BY total DESC
+            LIMIT 1''')
+            for node in response:
+                print('The best employee is #{employee}.'.format(**node))
 
     def highest_grossing_tracks(self):
         ''' This query will find the 10 highest grossing tracks. '''
-        pass
+        with db() as session:
+            response = session.run('''
+            MATCH (t:Track)<-[:FOR]-(il:InvoiceLine)
+            WITH DISTINCT(t) as track, SUM(il.unitPrice * il.quantity) as total
+            RETURN total, track.id as track
+            ORDER BY total DESC
+            LIMIT 10''')
+            for node in response:
+                print('Track #{track} generated £{total}.'.format(**node))
+
 
     def most_playlisted_artists(self):
         ''' This query will find the top 10 most playlisted artists. '''
-        pass
+        with db() as session:
+            response = session.run('''
+            MATCH (p:Playlist)-[:CONTAINS]->(track:Track)-[:ON]->(album:Album)-[:BY]->(ar:Artist)
+            WITH DISTINCT(ar) as artist, COUNT(track) as total
+            RETURN artist.id as artist, total
+            ORDER BY total DESC
+            LIMIT 10''')
+            for node in response:
+                print('Artist #{artist} has been playlisted {total} times.'.format(**node))
+
 
     def favourite_artist_by_region(self):
         ''' This query will display the favourite artist for each invoice region. '''
-        pass
+        with db() as session:
+            response = session.run('''
+            MATCH (c:Customer)<-[:BILLED_TO]-(i:Invoice)<-[:IN]-(il:InvoiceLine)-[:FOR]->(t:Track)-[:ON]->(al:Album)-[:BY]->(art:Artist)
+            WITH distinct(i.billingCountry) as country, COUNT(il) as amount, art.name as name
+            WITH {top: MAX(amount), country: country} as topPerCountry
+            MATCH (c:Customer)<-[:BILLED_TO]-(i:Invoice)<-[:IN]-(il:InvoiceLine)-[:FOR]->(t:Track)-[:ON]->(al:Album)-[:BY]->(art:Artist)
+            WITH distinct(i.billingCountry) as country, COUNT(il) as amount, art.name as name, topPerCountry as topPerCountry
+            WHERE amount = topPerCountry.top AND country = topPerCountry.country
+            WITH country as country, collect(name) as name, amount
+            RETURN country, name, amount
+            ''')
+            for node in response:
+                country = node['country']
+                artists = ','.join(node['name'])
+                print(f'The most popular Artists in {country} are {artists}.')
